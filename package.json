@@ -1,0 +1,99 @@
+{
+  "name": "slidev-addon-sandpack",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Build stepped, multi-file Sandpack live-code demos in Slidev from readable Markdown.",
+  "author": "Nir Tamir",
+  "license": "MIT",
+  "homepage": "https://github.com/nirtamir2/talks/tree/main/packages/slidev-addon-sandpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirtamir2/talks.git",
+    "directory": "packages/slidev-addon-sandpack"
+  },
+  "bugs": {
+    "url": "https://github.com/nirtamir2/talks/issues"
+  },
+  "keywords": [
+    "slidev",
+    "slidev-addon",
+    "sandpack",
+    "codesandbox",
+    "live-code",
+    "presentation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": [
+    "./components/*.vue",
+    "./styles/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "components",
+    "dist",
+    "docs",
+    "setup",
+    "styles"
+  ],
+  "engines": {
+    "node": ">=20.19.0",
+    "slidev": ">=52.1.0"
+  },
+  "scripts": {
+    "build": "pnpm run clean && tsc -p tsconfig.build.json",
+    "build:example": "pnpm run build && slidev build example/slides.md --out example-dist",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "format:check": "prettier --check . --ignore-unknown",
+    "lint": "eslint src test/*.test.ts test/*.test.tsx components setup scripts example/**/*.ts example/**/*.tsx package.json tsconfig*.json vitest.config.ts --no-error-on-unmatched-pattern",
+    "test": "pnpm run build && vitest",
+    "test:pack": "node scripts/test-pack.mjs",
+    "test:run": "pnpm run build && vitest run",
+    "typecheck": "pnpm run build && tsc -p tsconfig.json --noEmit && vue-tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20",
+    "vue": ">=3.4.0"
+  },
+  "dependencies": {
+    "@codesandbox/sandpack-react": "^2.20.0",
+    "jiti": "^2.6.1",
+    "markdown-it": "^14.3.0",
+    "markdown-it-container": "^4.0.0"
+  },
+  "devDependencies": {
+    "@slidev/cli": "52.1.0",
+    "@slidev/theme-default": "^0.25.0",
+    "@slidev/types": "^52.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^24.8.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-slidev": "^1.0.5",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10",
+    "vitest": "^3.1.4",
+    "vue": "^3.5.22",
+    "vue-tsc": "^3.1.1"
+  }
+}
