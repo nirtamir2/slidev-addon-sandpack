@@ -39,6 +39,10 @@ app creates one PR comment with a pnpm development-dependency command and
 updates that comment after each successful PR update. This lets maintainers and
 reviewers test the exact proposed package in a Slidev project before merging.
 
+Preview packages contain pull-request code that may not have been reviewed.
+Install them only when you trust the change, use a disposable test project, and
+never treat them as production releases.
+
 Repository maintainers must install the official
 [pkg.pr.new GitHub App](https://github.com/apps/pkg-pr-new) for this repository
 once before previews can be published. The integration does not require an npm

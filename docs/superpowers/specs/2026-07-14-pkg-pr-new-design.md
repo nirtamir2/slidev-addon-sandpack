@@ -54,9 +54,10 @@ a stable URL that resolves to its latest successful preview. Compact URLs are
 supported by the package's existing npm publication and exact GitHub repository
 metadata.
 
-The workflow retains read-only repository contents permission. pkg.pr.new's
-GitHub App, rather than `GITHUB_TOKEN` or an npm token, handles preview status and
-pull-request comments.
+The existing jobs retain read-only repository contents permission. The preview
+job overrides its permissions to `{}` because pkg.pr.new's GitHub App, rather
+than `GITHUB_TOKEN` or an npm token, handles preview status and pull-request
+comments.
 
 ### Documentation
 

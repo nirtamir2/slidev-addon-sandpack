@@ -15,6 +15,8 @@ install command and the one-time GitHub App setup.
   by pkg.pr.new's current CI guidance.
 - Use one `preview` job after both CI job families; do not publish from a matrix
   job or invoke the command more than once.
+- Remove all `GITHUB_TOKEN` permissions from the preview job; the pkg.pr.new App
+  owns comments and status checks.
 - Preserve the default updating PR comment and PR-number URL while rendering a
   pnpm development-dependency command.
 - Leave the npm release workflow unchanged.
@@ -82,6 +84,7 @@ lockfile-backed CLI, and live verification depends on all committed changes.
 | Multiple jobs publish duplicate comments    | PR noise and ambiguous URLs       | Invoke `pkg-pr-new publish` once in a non-matrix job                 |
 | Preview path affects npm publishing         | Release regression                | Do not change `.github/workflows/release.yml` or use npm credentials |
 | Stale PR run completes after a newer commit | Comment points at old code        | Reuse the CI workflow's cancel-in-progress concurrency               |
+| Users trust unreviewed preview code         | Unsafe local execution            | Warn contributors to use trusted changes in disposable test projects |
 
 ## Open questions
 

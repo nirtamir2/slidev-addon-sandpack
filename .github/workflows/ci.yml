@@ -87,6 +87,7 @@ jobs:
     name: Publish PR preview
     if: github.event_name == 'pull_request'
     needs: [validate, package]
+    permissions: {}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository

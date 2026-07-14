@@ -32,6 +32,7 @@ all existing checks, rebuilds the package, and publishes through pkg.pr.new.
 
 - [ ] The job runs only for `pull_request` events.
 - [ ] The job depends on both `validate` and `package`.
+- [ ] The job has no `GITHUB_TOKEN` permissions.
 - [ ] The locked CLI publishes exactly once with pnpm dev-install comment
       formatting.
 
