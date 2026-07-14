@@ -100,14 +100,14 @@ workflow produces an installable PR package.
 
 **Acceptance criteria:**
 
-- [ ] The official pkg.pr.new GitHub App is installed for this repository.
-- [ ] The preview job succeeds on the implementation PR.
-- [ ] One app comment contains a working pnpm development install command.
+- [x] The official pkg.pr.new GitHub App is installed for this repository.
+- [x] The preview job succeeds on the implementation PR.
+- [x] One app comment contains a working pnpm development install command.
 
 **Verification:**
 
-- [ ] Inspect the GitHub Actions run and PR comment.
-- [ ] Confirm the preview URL resolves and reflects the PR revision.
+- [x] Inspect the GitHub Actions run and PR comment.
+- [x] Confirm the preview URL resolves and reflects the PR revision.
 
 **Dependencies:** Task 4 and a pushed pull request.
 

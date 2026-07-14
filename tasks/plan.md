@@ -47,7 +47,7 @@ install command and the one-time GitHub App setup.
 ### Phase 4: Verification and activation
 
 - [x] Task 4: Run the complete local quality and package-consumer suites.
-- [ ] Task 5: Push the branch, install or verify the pkg.pr.new GitHub App, and
+- [x] Task 5: Push the branch, install or verify the pkg.pr.new GitHub App, and
       confirm a real PR preview comment and package URL.
 
 ### Checkpoint: Complete
@@ -55,8 +55,8 @@ install command and the one-time GitHub App setup.
 - [x] `pnpm run check` passes.
 - [x] `pnpm run test:pack` passes.
 - [x] `git diff --check` passes and the change contains no credentials.
-- [ ] GitHub CI and the pkg.pr.new preview job pass on the pull request.
-- [ ] The PR has one updated preview comment with a pnpm `-D` install command.
+- [x] GitHub CI and the pkg.pr.new preview job pass on the pull request.
+- [x] The PR has one updated preview comment with a pnpm `-D` install command.
 
 ## Dependency order
 
