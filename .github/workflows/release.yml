@@ -42,4 +42,10 @@ jobs:
         run: pnpm run test:pack
 
       - name: Publish with npm trusted publishing
-        run: npm publish
+        run: |
+          package_version=$(node -p "const p=require('./package.json'); p.name+'@'+p.version")
+          if npm view "$package_version" version >/dev/null 2>&1; then
+            echo "$package_version is already published; nothing to do."
+          else
+            npm publish
+          fi

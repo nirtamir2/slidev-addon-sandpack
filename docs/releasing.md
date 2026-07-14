@@ -11,7 +11,6 @@ publisher with:
 npm trust github slidev-addon-sandpack \
   --file release.yml \
   --repo nirtamir2/slidev-addon-sandpack \
-  --allow-publish \
   --yes
 ```
 
