@@ -17,6 +17,12 @@
   color: var(--slidev-theme-foreground, canvastext);
 }
 
+.slidev-sandpack > .sp-wrapper {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+}
+
 .slidev-sandpack__controls {
   display: flex;
   min-height: 2.5rem;
@@ -66,6 +72,11 @@
   flex-wrap: nowrap;
   border: 0 !important;
   border-radius: 0 !important;
+}
+
+.slidev-sandpack__workspace > .sp-editor,
+.slidev-sandpack__workspace > .sp-preview {
+  height: auto !important;
 }
 
 .slidev-sandpack__workspace > .sp-editor {

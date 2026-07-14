@@ -6,11 +6,14 @@ import {
 import { registerWatchedFiles, resetWatchedFiles } from "../src/watch";
 
 describe("sandpack Vite integration", () => {
-  it("deduplicates the consumer's React runtime", () => {
+  it("deduplicates React and pre-bundles the Sandpack runtime", () => {
     const plugin = createSandpackVitePlugin();
 
     expect(plugin.config).toEqual(expect.any(Function));
     expect((plugin.config as () => unknown)()).toEqual({
+      optimizeDeps: {
+        include: ["slidev-addon-sandpack > @codesandbox/sandpack-react"],
+      },
       resolve: { dedupe: ["react", "react-dom"] },
     });
   });

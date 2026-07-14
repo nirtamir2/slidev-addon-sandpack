@@ -47,7 +47,12 @@ function adaptViteServer(server: ViteDevServer): SandpackServerAdapter {
 export function createSandpackVitePlugin(): Plugin {
   return {
     name: "slidev-addon-sandpack",
-    config: () => ({ resolve: { dedupe: ["react", "react-dom"] } }),
+    config: () => ({
+      optimizeDeps: {
+        include: ["slidev-addon-sandpack > @codesandbox/sandpack-react"],
+      },
+      resolve: { dedupe: ["react", "react-dom"] },
+    }),
     configureServer(server) {
       const dispose = configureSandpackServer(adaptViteServer(server));
       server.httpServer?.once("close", dispose);

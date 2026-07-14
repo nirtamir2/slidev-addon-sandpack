@@ -2,6 +2,14 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.2.1 - 2026-07-14
+
+### Fixed
+
+- Pre-bundle the Sandpack runtime in Vite so its CommonJS dependencies load
+  correctly in Slidev's development server.
+- Stretch the Sandpack editor and preview to fill the available slide height.
+
 ## 0.2.0 - 2026-07-14
 
 ### Changed
