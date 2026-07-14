@@ -7,14 +7,14 @@ and commit the pnpm resolution used by CI.
 
 **Acceptance criteria:**
 
-- [ ] `package.json` contains `pkg-pr-new` in `devDependencies`.
-- [ ] `pnpm-lock.yaml` resolves the declared CLI version.
-- [ ] `pnpm install --frozen-lockfile` succeeds.
+- [x] `package.json` contains `pkg-pr-new` in `devDependencies`.
+- [x] `pnpm-lock.yaml` resolves the declared CLI version.
+- [x] `pnpm install --frozen-lockfile` succeeds.
 
 **Verification:**
 
-- [ ] Run `pnpm install --frozen-lockfile`.
-- [ ] Run `pnpm exec pkg-pr-new --help` outside CI only if the CLI supports a
+- [x] Run `pnpm install --frozen-lockfile`.
+- [x] Run `pnpm exec pkg-pr-new --help` outside CI only if the CLI supports a
       local help command without publishing.
 
 **Dependencies:** None.
@@ -30,17 +30,17 @@ all existing checks, rebuilds the package, and publishes through pkg.pr.new.
 
 **Acceptance criteria:**
 
-- [ ] The job runs only for `pull_request` events.
-- [ ] The job depends on both `validate` and `package`.
-- [ ] The job has no `GITHUB_TOKEN` permissions.
-- [ ] The locked CLI publishes exactly once with pnpm dev-install comment
+- [x] The job runs only for `pull_request` events.
+- [x] The job depends on both `validate` and `package`.
+- [x] The job has no `GITHUB_TOKEN` permissions.
+- [x] The locked CLI publishes exactly once with pnpm dev-install comment
       formatting.
 
 **Verification:**
 
-- [ ] Run Prettier against `.github/workflows/ci.yml`.
-- [ ] Inspect the parsed YAML structure and workflow diff.
-- [ ] Confirm `.github/workflows/release.yml` is unchanged.
+- [x] Run Prettier against `.github/workflows/ci.yml`.
+- [x] Inspect the parsed YAML structure and workflow diff.
+- [x] Confirm `.github/workflows/release.yml` is unchanged.
 
 **Dependencies:** Task 1.
 
@@ -55,14 +55,14 @@ contributor and maintainer setup.
 
 **Acceptance criteria:**
 
-- [ ] README displays the official repository badge.
-- [ ] Contributing guidance describes the updated PR comment and preview use.
-- [ ] One-time GitHub App activation is documented.
+- [x] README displays the official repository badge.
+- [x] Contributing guidance describes the updated PR comment and preview use.
+- [x] One-time GitHub App activation is documented.
 
 **Verification:**
 
-- [ ] Run Prettier against both Markdown files.
-- [ ] Check all pkg.pr.new links and repository identifiers.
+- [x] Run Prettier against both Markdown files.
+- [x] Check all pkg.pr.new links and repository identifiers.
 
 **Dependencies:** Task 2.
 
@@ -77,15 +77,15 @@ consumer after all implementation changes.
 
 **Acceptance criteria:**
 
-- [ ] Formatting, linting, type checking, unit tests, and example build pass.
-- [ ] Isolated package-consumer test passes.
-- [ ] Diff is clean, scoped, and credential-free.
+- [x] Formatting, linting, type checking, unit tests, and example build pass.
+- [x] Isolated package-consumer test passes.
+- [x] Diff is clean, scoped, and credential-free.
 
 **Verification:**
 
-- [ ] Run `pnpm run check`.
-- [ ] Run `pnpm run test:pack`.
-- [ ] Run `git diff --check` and inspect `git diff`.
+- [x] Run `pnpm run check`.
+- [x] Run `pnpm run test:pack`.
+- [x] Run `git diff --check` and inspect `git diff`.
 
 **Dependencies:** Tasks 1-3.
 

@@ -25,36 +25,36 @@ install command and the one-time GitHub App setup.
 
 ### Phase 1: Locked publishing tool
 
-- [ ] Task 1: Add `pkg-pr-new` to `devDependencies` and update `pnpm-lock.yaml`.
+- [x] Task 1: Add `pkg-pr-new` to `devDependencies` and update `pnpm-lock.yaml`.
 
 ### Phase 2: CI integration
 
-- [ ] Task 2: Add a PR-only `preview` job that waits for `validate` and
+- [x] Task 2: Add a PR-only `preview` job that waits for `validate` and
       `package`, rebuilds the package, and publishes it once.
 
 ### Checkpoint: Integration
 
-- [ ] Manifest and lockfile are formatted and frozen install succeeds.
-- [ ] Workflow syntax is valid and the job dependency/event conditions match
+- [x] Manifest and lockfile are formatted and frozen install succeeds.
+- [x] Workflow syntax is valid and the job dependency/event conditions match
       the design.
-- [ ] The production npm release workflow is unchanged.
+- [x] The production npm release workflow is unchanged.
 
 ### Phase 3: Contributor guidance
 
-- [ ] Task 3: Add the pkg.pr.new badge and document PR previews and GitHub App
+- [x] Task 3: Add the pkg.pr.new badge and document PR previews and GitHub App
       activation.
 
 ### Phase 4: Verification and activation
 
-- [ ] Task 4: Run the complete local quality and package-consumer suites.
+- [x] Task 4: Run the complete local quality and package-consumer suites.
 - [ ] Task 5: Push the branch, install or verify the pkg.pr.new GitHub App, and
       confirm a real PR preview comment and package URL.
 
 ### Checkpoint: Complete
 
-- [ ] `pnpm run check` passes.
-- [ ] `pnpm run test:pack` passes.
-- [ ] `git diff --check` passes and the change contains no credentials.
+- [x] `pnpm run check` passes.
+- [x] `pnpm run test:pack` passes.
+- [x] `git diff --check` passes and the change contains no credentials.
 - [ ] GitHub CI and the pkg.pr.new preview job pass on the pull request.
 - [ ] The PR has one updated preview comment with a pnpm `-D` install command.
 
