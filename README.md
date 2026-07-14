@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/slidev-addon-sandpack)](https://www.npmjs.com/package/slidev-addon-sandpack)
 [![CI](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml/badge.svg)](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml)
+[![pkg.pr.new](https://pkg.pr.new/badge/nirtamir2/slidev-addon-sandpack)](https://pkg.pr.new/~/nirtamir2/slidev-addon-sandpack)
 [![license](https://img.shields.io/npm/l/slidev-addon-sandpack)](./LICENSE)
 
 Build stepped, multi-file [CodeSandbox Sandpack](https://sandpack.codesandbox.io/) live-code demos in [Slidev](https://sli.dev/) from readable Markdown.
