@@ -1,7 +1,7 @@
 {
   "name": "slidev-addon-sandpack",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Build stepped, multi-file Sandpack live-code demos in Slidev from readable Markdown.",
   "author": "Nir Tamir",
   "license": "MIT",
@@ -73,8 +73,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
     "jiti": "^2.6.1",
-    "markdown-it": "^14.3.0",
-    "markdown-it-container": "^4.0.0"
+    "markdown-it": "^14.3.0"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

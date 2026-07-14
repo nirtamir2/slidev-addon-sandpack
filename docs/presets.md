@@ -21,7 +21,7 @@ The addon loads the file without a persistent module cache. In development it al
 
 For each demo, the addon chooses:
 
-1. The name in `@@@ preset-name`.
+1. The optional name following `sandpack` on the opening four-backtick fence.
 2. `defaultPreset` from the deck config.
 3. Sandpack's built-in `react-ts` template.
 
@@ -165,4 +165,5 @@ export default defineSandpackConfig({
 });
 ```
 
-Use `@@@` for the R3F default or `@@@ physics` for the Rapier extension.
+Use an opening four-backtick `sandpack` fence for the R3F default, or append
+`physics` after `sandpack` for the Rapier extension.

@@ -1,13 +1,10 @@
 import MarkdownIt from "markdown-it";
-import markdownItContainer from "markdown-it-container";
 import { normalizeSandpackPath } from "./paths.js";
 
 type MarkdownToken = ReturnType<MarkdownIt["parse"]>[number];
 
-const CONTAINER_NAME = "sandpack";
-const CONTAINER_OPEN = `container_${CONTAINER_NAME}_open`;
-const CONTAINER_CLOSE = `container_${CONTAINER_NAME}_close`;
-const DELIMITER = "@@@";
+const FENCE_NAME = "sandpack";
+const MIN_OUTER_FENCE_LENGTH = 4;
 const STEP_MARKER = "<!-- sandpack:step -->";
 const ERROR_PREFIX = "[slidev-addon-sandpack]";
 const PRESET_NAME = /^[a-z\d][\w-]*$/i;
@@ -34,80 +31,6 @@ export interface ParsedSandpackDemo {
 function parserError(demoIndex: number, line: number, message: string): Error {
   return new Error(
     `${ERROR_PREFIX} Demo ${demoIndex + 1}, line ${line + 1}: ${message}`,
-  );
-}
-
-function createMarkdownParser(): MarkdownIt {
-  return new MarkdownIt({ html: true }).use(
-    markdownItContainer,
-    CONTAINER_NAME,
-    {
-      marker: "@",
-      // Parse every candidate and validate it with contextual errors ourselves.
-      validate: () => true,
-    },
-  );
-}
-
-function findUnusedSentinel(source: string): string {
-  for (let codePoint = 0xe000; codePoint <= 0xf8ff; codePoint += 1) {
-    const candidate = String.fromCodePoint(codePoint);
-    if (!source.includes(candidate)) return candidate;
-  }
-
-  throw new Error(
-    `${ERROR_PREFIX} The slide contains every private-use character, so fenced code cannot be parsed safely.`,
-  );
-}
-
-/**
- * markdown-it-container scans for its closing marker before tokenizing its
- * children. A first Markdown-it pass gives us the real fence ranges so an
- * `@@@` line inside code cannot terminate the surrounding demo.
- */
-function maskFencedCode(source: string): {
-  maskedSource: string;
-  sentinel: string;
-} {
-  const sentinel = findUnusedSentinel(source);
-  const lines = source.split("\n");
-  const baseTokens = new MarkdownIt({ html: true }).parse(source, {});
-
-  for (const token of baseTokens) {
-    if (token.type !== "fence" || !token.map) continue;
-
-    const [startLine, endLine] = token.map;
-    for (let line = startLine + 1; line < endLine; line += 1) {
-      const value = lines[line];
-      if (value?.includes("@")) lines[line] = value.replaceAll("@", sentinel);
-    }
-  }
-
-  return { maskedSource: lines.join("\n"), sentinel };
-}
-
-function findContainerClose(
-  tokens: Array<MarkdownToken>,
-  openIndex: number,
-  demoIndex: number,
-): number {
-  for (let index = openIndex + 1; index < tokens.length; index += 1) {
-    const token = tokens[index];
-    if (!token) continue;
-    if (token.type === CONTAINER_OPEN)
-      throw parserError(
-        demoIndex,
-        token.map?.[0] ?? 0,
-        "Nested Sandpack containers are not supported.",
-      );
-    if (token.type === CONTAINER_CLOSE) return index;
-  }
-
-  const open = tokens[openIndex];
-  throw parserError(
-    demoIndex,
-    open?.map?.[0] ?? 0,
-    `Container is missing its closing ${DELIMITER} line.`,
   );
 }
 
@@ -146,53 +69,6 @@ function parseFenceInfo(
   }
 }
 
-interface ValidatedContainer {
-  presetName: string | undefined;
-  startLine: number;
-  closeLine: number;
-}
-
-function validateContainer(
-  open: MarkdownToken | undefined,
-  close: MarkdownToken | undefined,
-  demoIndex: number,
-): ValidatedContainer {
-  if (!open?.map)
-    throw parserError(demoIndex, 0, "Container has no source map.");
-  if (open.markup !== DELIMITER)
-    throw parserError(
-      demoIndex,
-      open.map[0],
-      `Use exactly ${DELIMITER} to open a Sandpack demo.`,
-    );
-  if (!close?.markup)
-    throw parserError(
-      demoIndex,
-      open.map[0],
-      `Container is missing its closing ${DELIMITER} line.`,
-    );
-  if (close.markup !== DELIMITER)
-    throw parserError(
-      demoIndex,
-      open.map[1],
-      `Use exactly ${DELIMITER} to close a Sandpack demo.`,
-    );
-
-  const presetName = open.info.trim() || undefined;
-  if (presetName && !PRESET_NAME.test(presetName))
-    throw parserError(
-      demoIndex,
-      open.map[0],
-      `Preset name ${JSON.stringify(presetName)} may contain only letters, digits, underscores, and hyphens.`,
-    );
-
-  return {
-    closeLine: open.map[1],
-    presetName,
-    startLine: open.map[0],
-  };
-}
-
 interface StepState {
   steps: Array<ParsedSandpackStep>;
   files: Array<ParsedSandpackFile>;
@@ -215,7 +91,6 @@ function finishStep(state: StepState, demoIndex: number, line: number): void {
 interface ContentTokenContext {
   demoIndex: number;
   fallbackLine: number;
-  sentinel: string;
 }
 
 function addFence(
@@ -232,7 +107,7 @@ function addFence(
     );
   state.filePaths.add(path);
   state.files.push({
-    code: token.content.replaceAll(context.sentinel, "@"),
+    code: token.content,
     language,
     path,
   });
@@ -292,33 +167,56 @@ function parseSteps(options: ParseStepsOptions): Array<ParsedSandpackStep> {
   return state.steps;
 }
 
-interface ParseContainerOptions {
-  tokens: Array<MarkdownToken>;
-  openIndex: number;
-  closeIndex: number;
-  demoIndex: number;
-  sentinel: string;
-}
+function parseOuterFence(
+  token: MarkdownToken,
+  demoIndex: number,
+  sourceLines: Array<string>,
+): ParsedSandpackDemo {
+  if (!token.map) throw parserError(demoIndex, 0, "Fence has no source map.");
+  const [startLine, endLine] = token.map;
+  if (token.markup[0] !== "`" || token.markup.length < MIN_OUTER_FENCE_LENGTH)
+    throw parserError(
+      demoIndex,
+      startLine,
+      "Open Sandpack demos with at least four backticks.",
+    );
 
-function parseContainer(options: ParseContainerOptions): ParsedSandpackDemo {
-  const open = options.tokens[options.openIndex];
-  const close = options.tokens[options.closeIndex];
-  const { closeLine, presetName, startLine } = validateContainer(
-    open,
-    close,
-    options.demoIndex,
-  );
+  const closingLine = sourceLines[endLine - 1]?.trimStart() ?? "";
+  const closingFence = /^(`+)\s*$/.exec(closingLine)?.[1];
+  if (!closingFence || closingFence.length < token.markup.length)
+    throw parserError(
+      demoIndex,
+      startLine,
+      `Demo is missing its closing ${token.markup} line.`,
+    );
+
+  const presetName = token.info.slice(FENCE_NAME.length).trim() || undefined;
+  if (presetName && !PRESET_NAME.test(presetName))
+    throw parserError(
+      demoIndex,
+      startLine,
+      `Preset name ${JSON.stringify(presetName)} may contain only letters, digits, underscores, and hyphens.`,
+    );
+
+  const contentStartLine = startLine + 1;
+  const tokens = new MarkdownIt({ html: true }).parse(token.content, {});
+  for (const child of tokens) {
+    if (child.map)
+      child.map = child.map.map((line) => line + contentStartLine) as [
+        number,
+        number,
+      ];
+  }
   const steps = parseSteps({
-    demoIndex: options.demoIndex,
-    endIndex: options.closeIndex,
-    fallbackLine: closeLine,
-    sentinel: options.sentinel,
-    startIndex: options.openIndex + 1,
-    tokens: options.tokens,
+    demoIndex,
+    endIndex: tokens.length,
+    fallbackLine: endLine - 1,
+    startIndex: 0,
+    tokens,
   });
 
   return {
-    endLine: closeLine + 1,
+    endLine,
     presetName,
     startLine,
     steps,
@@ -326,29 +224,15 @@ function parseContainer(options: ParseContainerOptions): ParsedSandpackDemo {
 }
 
 export function parseSandpackDemos(source: string): Array<ParsedSandpackDemo> {
-  const { maskedSource, sentinel } = maskFencedCode(source);
-  const tokens = createMarkdownParser().parse(maskedSource, {});
+  const tokens = new MarkdownIt({ html: true }).parse(source, {});
+  const sourceLines = source.split("\n");
   const demos: Array<ParsedSandpackDemo> = [];
 
-  let index = 0;
-  while (index < tokens.length) {
-    const token = tokens[index];
-    if (token?.type !== CONTAINER_OPEN) {
-      index += 1;
-      continue;
-    }
-
-    const closeIndex = findContainerClose(tokens, index, demos.length);
-    demos.push(
-      parseContainer({
-        closeIndex,
-        demoIndex: demos.length,
-        openIndex: index,
-        sentinel,
-        tokens,
-      }),
-    );
-    index = closeIndex + 1;
+  for (const token of tokens) {
+    if (token.type !== "fence") continue;
+    const fenceName = token.info.trim().split(/\s+/, 1)[0];
+    if (fenceName !== FENCE_NAME) continue;
+    demos.push(parseOuterFence(token, demos.length, sourceLines));
   }
 
   return demos;

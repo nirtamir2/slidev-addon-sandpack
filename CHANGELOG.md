@@ -2,6 +2,14 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.2.0 - 2026-07-14
+
+### Changed
+
+- **Breaking:** Replaced `@@@` Sandpack containers with four-backtick
+  `sandpack` fences. A named preset follows `sandpack` on the opening fence.
+  The old container syntax is no longer supported.
+
 ## 0.1.1 - 2026-07-14
 
 ### Changed

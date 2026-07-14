@@ -7,7 +7,7 @@ const configFile = new URL("fixtures/sandpack.config.ts", import.meta.url);
 
 function parseDemo(preset = "physics") {
   const [demo] = parseSandpackDemos(
-    `@@@ ${preset}\n\n\`\`\`tsx [App.tsx]\nexport default function App() { return <main>one</main> }\n\`\`\`\n\n<!-- sandpack:step -->\n\n\`\`\`tsx [Card.tsx]\nexport const Card = () => <article>card</article>\n\`\`\`\n\n\`\`\`tsx [App.tsx]\nimport { Card } from './Card'\nexport default function App() { return <Card /> }\n\`\`\`\n\n@@@\n`,
+    `\`\`\`\`sandpack ${preset}\n\n\`\`\`tsx [App.tsx]\nexport default function App() { return <main>one</main> }\n\`\`\`\n\n<!-- sandpack:step -->\n\n\`\`\`tsx [Card.tsx]\nexport const Card = () => <article>card</article>\n\`\`\`\n\n\`\`\`tsx [App.tsx]\nimport { Card } from './Card'\nexport default function App() { return <Card /> }\n\`\`\`\n\n\`\`\`\`\n`,
   );
   if (!demo) throw new Error("Expected a parsed demo fixture.");
   return demo;

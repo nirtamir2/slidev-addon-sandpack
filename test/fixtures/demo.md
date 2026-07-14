@@ -1,6 +1,6 @@
 Before the demo.
 
-@@@ physics
+````sandpack physics
 
 ```tsx [App.tsx]
 export default function App() {
@@ -23,16 +23,16 @@ export function Card() {
 <!-- sandpack:step -->
 ```
 
-@@@
+````
 
 Between demos.
 
-@@@
+````sandpack
 
 ```ts [index.ts]
 console.log("second demo");
 ```
 
-@@@
+````
 
 After the demos.

@@ -15,7 +15,7 @@ describe("sandpack Slidev preparser", () => {
       mode: "build",
     });
     const frontmatter: Record<string, unknown> = {};
-    const content = `@@@\n\n\`\`\`tsx [App.tsx]\nexport default 1\n\`\`\`\n\n@@@`;
+    const content = `\`\`\`\`sandpack\n\n\`\`\`tsx [App.tsx]\nexport default 1\n\`\`\`\n\n\`\`\`\``;
 
     expect(extension?.name).toBe("slidev-addon-sandpack");
     expect(await extension?.transformSlide?.(content, frontmatter)).toContain(
