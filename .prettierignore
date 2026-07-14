@@ -1,2 +1,7 @@
 dist
 example/example-dist
+coverage
+dist
+example-dist
+example/example-dist
+pnpm-lock.yaml

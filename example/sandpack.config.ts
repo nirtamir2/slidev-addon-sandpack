@@ -1,4 +1,4 @@
-// eslint-disable-next-line workspaces/no-absolute-imports -- The example verifies the package's public consumer import.
+// This example verifies the package's public consumer import.
 import { defineSandpackConfig } from "slidev-addon-sandpack";
 
 export default defineSandpackConfig({

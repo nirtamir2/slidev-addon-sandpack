@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a reproducible problem with the addon.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve slidev-addon-sandpack.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Include the addon, Slidev, Node.js, React, and Vue versions.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link a repository or paste the smallest Markdown/config example that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+    validations:
+      required: true

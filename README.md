@@ -1,5 +1,9 @@
 # slidev-addon-sandpack
 
+[![npm version](https://img.shields.io/npm/v/slidev-addon-sandpack)](https://www.npmjs.com/package/slidev-addon-sandpack)
+[![CI](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml/badge.svg)](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/slidev-addon-sandpack)](./LICENSE)
+
 Build stepped, multi-file [CodeSandbox Sandpack](https://sandpack.codesandbox.io/) live-code demos in [Slidev](https://sli.dev/) from readable Markdown.
 
 ## Install
@@ -181,12 +185,12 @@ Replace generated `FilesPlayground` payloads or fences with manual `index`/`file
 ## Development
 
 ```bash
+corepack enable
 pnpm install
-pnpm --filter slidev-addon-sandpack test:run
-pnpm --filter slidev-addon-sandpack typecheck
-pnpm --filter slidev-addon-sandpack lint
-pnpm --filter slidev-addon-sandpack build:example
-pnpm --filter slidev-addon-sandpack test:pack
+pnpm run check
+pnpm run test:pack
 ```
 
-The package is MIT licensed. The surrounding monorepo uses a different root license; the package-level [LICENSE](./LICENSE) governs `slidev-addon-sandpack`.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow and pull-request expectations.
+
+The package is released under the [MIT License](./LICENSE).

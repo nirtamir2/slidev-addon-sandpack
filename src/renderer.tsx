@@ -1,6 +1,5 @@
 import { Component, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions -- The section only stops events after its native controls and CodeMirror handle them. */
 import {
   SandpackCodeEditor,
   SandpackLayout,
@@ -160,5 +159,3 @@ export function SandpackDemoRenderer({ demo }: { demo: SandpackDemo }) {
     </SandpackErrorBoundary>
   );
 }
-
-/* eslint-enable jsx-a11y/no-noninteractive-element-interactions */

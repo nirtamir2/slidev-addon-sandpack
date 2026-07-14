@@ -2,6 +2,15 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.1.1 - 2026-07-14
+
+### Changed
+
+- Moved development, issues, CI, and releases to the standalone
+  `nirtamir2/slidev-addon-sandpack` repository.
+- Added repository-owned ESLint 10 and Prettier 3 configuration, contributor
+  documentation, dependency updates, and npm trusted publishing infrastructure.
+
 ## 0.1.0 - 2026-07-12
 
 ### Added

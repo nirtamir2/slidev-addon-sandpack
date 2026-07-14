@@ -1,11 +1,9 @@
 <script setup lang="ts">
-/* eslint-disable antfu/no-import-dist -- Published Slidev convention files intentionally consume the package's compiled runtime. */
+// Published Slidev convention files intentionally consume the package's compiled runtime.
 import { onBeforeUnmount, onMounted, ref, toRaw, watch } from "vue";
 import { mountSandpackRenderer } from "../dist/bridge.js";
 import type { MountedSandpackRenderer } from "../dist/bridge.js";
 import type { SandpackDemo } from "../dist/types.js";
-
-/* eslint-enable antfu/no-import-dist */
 
 const props = defineProps<{ demo: SandpackDemo }>();
 const mountElement = ref<HTMLDivElement | null>(null);

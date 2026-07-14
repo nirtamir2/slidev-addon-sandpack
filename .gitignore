@@ -1,1 +1,12 @@
-/example/example-dist/
+coverage/
+dist/
+example-dist/
+example/example-dist/
+node_modules/
+
+.env
+.env.*
+!.env.example
+
+*.log
+.DS_Store

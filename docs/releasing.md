@@ -4,15 +4,30 @@ This package uses npm trusted publishing from GitHub Actions. The release workfl
 
 ## One-time setup
 
-1. Publish `0.1.0` from `packages/slidev-addon-sandpack` while signed in to npm. npm requires the package to exist before its trusted publisher can be configured.
-2. In the `slidev-addon-sandpack` package settings on npm, add a GitHub Actions trusted publisher with:
-   - Organization or user: `nirtamir2`
-   - Repository: `talks`
-   - Workflow filename: `slidev-addon-release.yml`
-   - Allowed action: `npm publish`
-3. After verifying trusted publishing, disallow token-based publishing for the package and revoke any automation token that is no longer needed.
+The package already exists on npm. Configure its GitHub Actions trusted
+publisher with:
 
-The repository URL in `package.json` must continue to match `https://github.com/nirtamir2/talks` exactly for npm's OIDC validation.
+```bash
+npm trust github slidev-addon-sandpack \
+  --file release.yml \
+  --repo nirtamir2/slidev-addon-sandpack \
+  --allow-publish \
+  --yes
+```
+
+The equivalent npm package settings are:
+
+- Organization or user: `nirtamir2`
+- Repository: `slidev-addon-sandpack`
+- Workflow filename: `release.yml`
+- Allowed action: `npm publish`
+
+After verifying trusted publishing, disallow token-based publishing for the
+package and revoke any automation token that is no longer needed.
+
+The repository URL in `package.json` must continue to match
+`https://github.com/nirtamir2/slidev-addon-sandpack` exactly for npm's OIDC
+validation.
 
 ## Release checklist
 
@@ -20,17 +35,15 @@ The repository URL in `package.json` must continue to match `https://github.com/
 2. Run:
 
    ```bash
-   pnpm --filter slidev-addon-sandpack format:check
-   pnpm --filter slidev-addon-sandpack lint
-   pnpm --filter slidev-addon-sandpack typecheck
-   pnpm --filter slidev-addon-sandpack test:run
-   pnpm --filter slidev-addon-sandpack build:example
-   pnpm --filter slidev-addon-sandpack test:pack
+   pnpm run check
+   pnpm run test:pack
+   pnpm run audit:prod
    ```
 
 3. Merge the release commit to the default branch.
-4. Create and publish a GitHub release tagged `slidev-addon-sandpack-v<version>`, for example `slidev-addon-sandpack-v0.1.1`.
-5. Confirm the `Publish Slidev addon` workflow succeeds and the npm page shows provenance.
+4. Create and publish a GitHub release tagged `v<version>`, for example
+   `v0.1.1`.
+5. Confirm the `Publish` workflow succeeds and the npm page shows provenance.
 
 ## Slidev addon gallery
 

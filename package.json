@@ -1,18 +1,17 @@
 {
   "name": "slidev-addon-sandpack",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build stepped, multi-file Sandpack live-code demos in Slidev from readable Markdown.",
   "author": "Nir Tamir",
   "license": "MIT",
-  "homepage": "https://github.com/nirtamir2/talks/tree/main/packages/slidev-addon-sandpack#readme",
+  "homepage": "https://github.com/nirtamir2/slidev-addon-sandpack#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nirtamir2/talks.git",
-    "directory": "packages/slidev-addon-sandpack"
+    "url": "git+https://github.com/nirtamir2/slidev-addon-sandpack.git"
   },
   "bugs": {
-    "url": "https://github.com/nirtamir2/talks/issues"
+    "url": "https://github.com/nirtamir2/slidev-addon-sandpack/issues"
   },
   "keywords": [
     "slidev",
@@ -50,12 +49,17 @@
     "node": ">=20.19.0",
     "slidev": ">=52.1.0"
   },
+  "packageManager": "pnpm@10.18.3",
   "scripts": {
+    "audit:prod": "pnpm audit --prod --audit-level high",
     "build": "pnpm run clean && tsc -p tsconfig.build.json",
     "build:example": "pnpm run build && slidev build example/slides.md --out example-dist",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:run && pnpm run build:example",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
-    "lint": "eslint src test/*.test.ts test/*.test.tsx components setup scripts example/**/*.ts example/**/*.tsx package.json tsconfig*.json vitest.config.ts --no-error-on-unmatched-pattern",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "pnpm run build && vitest",
     "test:pack": "node scripts/test-pack.mjs",
     "test:run": "pnpm run build && vitest run",
@@ -73,6 +77,7 @@
     "markdown-it-container": "^4.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@slidev/cli": "52.1.0",
     "@slidev/theme-default": "^0.25.0",
     "@slidev/types": "^52.1.0",
@@ -85,12 +90,17 @@
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
+    "eslint": "10.7.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-vue": "10.9.2",
+    "globals": "17.7.0",
     "jsdom": "^26.1.0",
-    "prettier": "^3.6.2",
+    "prettier": "3.9.5",
     "prettier-plugin-slidev": "^1.0.5",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "typescript": "^5.9.3",
+    "typescript-eslint": "8.64.0",
     "vite": "^7.1.10",
     "vitest": "^3.1.4",
     "vue": "^3.5.22",
