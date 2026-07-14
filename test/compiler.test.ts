@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { compileSandpackSlide } from "../src/compiler";
 
-const source = `Before\n\n@@@ react-ts\n\n\`\`\`tsx [App.tsx]\nexport default () => <h1>One</h1>\n\`\`\`\n\n@@@\n\nBetween\n\n@@@ vanilla\n\n\`\`\`js [index.js]\nconsole.log('two')\n\`\`\`\n\n@@@\n\nAfter`;
+const source = `Before\n\n\`\`\`\`sandpack react-ts\n\n\`\`\`tsx [App.tsx]\nexport default () => <h1>One</h1>\n\`\`\`\n\n\`\`\`\`\n\nBetween\n\n\`\`\`\`sandpack vanilla\n\n\`\`\`js [index.js]\nconsole.log('two')\n\`\`\`\n\n\`\`\`\`\n\nAfter`;
 
 describe("compileSandpackSlide", () => {
   it("stores resolved demos in frontmatter and replaces only source ranges", async () => {

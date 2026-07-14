@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/slidev-addon-sandpack)](https://www.npmjs.com/package/slidev-addon-sandpack)
 [![CI](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml/badge.svg)](https://github.com/nirtamir2/slidev-addon-sandpack/actions/workflows/ci.yml)
+[![pkg.pr.new](https://pkg.pr.new/badge/nirtamir2/slidev-addon-sandpack)](https://pkg.pr.new/~/nirtamir2/slidev-addon-sandpack)
 [![license](https://img.shields.io/npm/l/slidev-addon-sandpack)](./LICENSE)
 
 Build stepped, multi-file [CodeSandbox Sandpack](https://sandpack.codesandbox.io/) live-code demos in [Slidev](https://sli.dev/) from readable Markdown.
@@ -26,10 +27,10 @@ addons:
 
 ## Quick start
 
-Use `@@@` for the demo container and a normal Slidev code-block title for each filename:
+Use a four-backtick `sandpack` fence for the demo and a normal Slidev code-block title for each filename:
 
-````md
-@@@
+`````md
+````sandpack
 
 ```tsx [App.tsx]
 export default function App() {
@@ -37,8 +38,8 @@ export default function App() {
 }
 ```
 
-@@@
 ````
+`````
 
 The filename is required. `App.tsx`, `/App.tsx`, and `./App.tsx` all resolve to `/App.tsx`.
 
@@ -46,8 +47,8 @@ The filename is required. `App.tsx`, `/App.tsx`, and `./App.tsx` all resolve to 
 
 Add the formatter-safe `<!-- sandpack:step -->` comment between steps. Each step starts with the fully resolved files from the previous step, then replaces or adds the files it declares.
 
-````md
-@@@
+`````md
+````sandpack
 
 ```tsx [App.tsx]
 export default function App() {
@@ -71,8 +72,8 @@ export default function App() {
 }
 ```
 
-@@@
 ````
+`````
 
 The first file declared in a step becomes its active file. File deletion is intentionally not supported in version 1.
 
@@ -121,8 +122,8 @@ export default defineSandpackConfig({
 
 Select a named preset after the opening delimiter:
 
-````md
-@@@ physics
+`````md
+````sandpack physics
 
 ```tsx [App.tsx]
 export default function App() {
@@ -130,8 +131,8 @@ export default function App() {
 }
 ```
 
-@@@
 ````
+`````
 
 See [docs/presets.md](./docs/presets.md) for inheritance, merge rules, source-backed files, layouts, and shareable preset packages.
 
@@ -180,7 +181,7 @@ Check the dependency name/version in the selected preset and the browser network
 
 ## Migrating from the original talk syntax
 
-Replace generated `FilesPlayground` payloads or fences with manual `index`/`file` attributes with an `@@@` container. Put each file path in the fence title and replace index changes with `<!-- sandpack:step -->`. Move shared entry files, styles, and dependency maps into a named preset.
+Replace generated `FilesPlayground` payloads or fences with manual `index`/`file` attributes with a four-backtick `sandpack` fence. Put each file path in the fence title and replace index changes with `<!-- sandpack:step -->`. Move shared entry files, styles, and dependency maps into a named preset.
 
 ## Development
 

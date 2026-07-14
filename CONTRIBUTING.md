@@ -31,6 +31,23 @@ Formatting is enforced by the repository's Prettier configuration. TypeScript,
 Vue, and React code is linted by the repository's ESLint flat configuration.
 CI runs the same checks on every pull request and push to `main`.
 
+### Preview packages
+
+After all pull-request checks pass, CI publishes the built addon to
+[pkg.pr.new](https://pkg.pr.new/) without publishing it to npm. The pkg.pr.new
+app creates one PR comment with a pnpm development-dependency command and
+updates that comment after each successful PR update. This lets maintainers and
+reviewers test the exact proposed package in a Slidev project before merging.
+
+Preview packages contain pull-request code that may not have been reviewed.
+Install them only when you trust the change, use a disposable test project, and
+never treat them as production releases.
+
+Repository maintainers must install the official
+[pkg.pr.new GitHub App](https://github.com/apps/pkg-pr-new) for this repository
+once before previews can be published. The integration does not require an npm
+token and does not change the release process.
+
 ## Reporting security issues
 
 Do not open a public issue for a suspected vulnerability. Follow

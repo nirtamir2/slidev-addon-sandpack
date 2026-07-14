@@ -1,7 +1,7 @@
 {
   "name": "slidev-addon-sandpack",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Build stepped, multi-file Sandpack live-code demos in Slidev from readable Markdown.",
   "author": "Nir Tamir",
   "license": "MIT",
@@ -73,8 +73,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
     "jiti": "^2.6.1",
-    "markdown-it": "^14.3.0",
-    "markdown-it-container": "^4.0.0"
+    "markdown-it": "^14.3.0"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -95,6 +94,7 @@
     "eslint-plugin-vue": "10.9.2",
     "globals": "17.7.0",
     "jsdom": "^26.1.0",
+    "pkg-pr-new": "0.0.78",
     "prettier": "3.9.5",
     "prettier-plugin-slidev": "^1.0.5",
     "react": "^19.2.1",

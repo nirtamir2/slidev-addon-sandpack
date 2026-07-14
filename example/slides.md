@@ -13,7 +13,7 @@ Readable, multi-file live-code demos powered by CodeSandbox Sandpack.
 
 # Minimal demo
 
-@@@
+````sandpack
 
 ```tsx [App.tsx]
 export default function App() {
@@ -21,13 +21,13 @@ export default function App() {
 }
 ```
 
-@@@
+````
 
 ---
 
 # Source-backed preset and steps
 
-@@@ starter
+````sandpack starter
 
 ```tsx [App.tsx]
 import clsx from "clsx";
@@ -58,4 +58,4 @@ export default function App() {
 }
 ```
 
-@@@
+````

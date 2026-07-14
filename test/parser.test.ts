@@ -66,7 +66,7 @@ describe("parseSandpackDemos", () => {
   });
 
   it("keeps the step comment stable through Slidev formatting", async () => {
-    const source = `@@@\n\n\`\`\`tsx [App.tsx]\nexport default 1\n\`\`\`\n\n<!-- sandpack:step -->\n\n~~~tsx [App.tsx]\nexport default 2\n~~~\n\n@@@\n`;
+    const source = `\`\`\`\`sandpack\n\n\`\`\`tsx [App.tsx]\nexport default 1\n\`\`\`\n\n<!-- sandpack:step -->\n\n~~~tsx [App.tsx]\nexport default 2\n~~~\n\n\`\`\`\`\n`;
 
     const formatted = await format(source, {
       parser: "slidev",
@@ -83,25 +83,34 @@ describe("parseSandpackDemos", () => {
     ).toBe(formatted);
   });
 
+  it("does not recognize the removed container syntax", () => {
+    const source = "@@@\n```ts [a.ts]\na\n```\n@@@\n";
+
+    expect(parseSandpackDemos(source)).toEqual([]);
+  });
+
   it.each([
-    ["unclosed container", "@@@\n\n```ts [a.ts]\na\n```\n"],
-    ["nested container", "@@@\n\n@@@@ nested\n@@@@\n\n@@@\n"],
-    ["empty demo", "@@@\n@@@\n"],
+    ["unclosed outer fence", "````sandpack\n```ts [a.ts]\na\n```\n"],
+    ["three-backtick outer fence", "```sandpack\na\n```\n"],
+    ["empty demo", "````sandpack\n````\n"],
     [
       "empty first step",
-      "@@@\n<!-- sandpack:step -->\n```ts [a.ts]\na\n```\n@@@\n",
+      "````sandpack\n<!-- sandpack:step -->\n```ts [a.ts]\na\n```\n````\n",
     ],
     [
       "empty later step",
-      "@@@\n```ts [a.ts]\na\n```\n<!-- sandpack:step -->\n@@@\n",
+      "````sandpack\n```ts [a.ts]\na\n```\n<!-- sandpack:step -->\n````\n",
     ],
-    ["missing filename", "@@@\n```ts\na\n```\n@@@\n"],
+    ["missing filename", "````sandpack\n```ts\na\n```\n````\n"],
     [
       "duplicate canonical filename",
-      "@@@\n```ts [a.ts]\na\n```\n```ts [/a.ts]\nb\n```\n@@@\n",
+      "````sandpack\n```ts [a.ts]\na\n```\n```ts [/a.ts]\nb\n```\n````\n",
     ],
-    ["unexpected prose", "@@@\nThis is not a file.\n@@@\n"],
-    ["invalid preset name", "@@@ two words\n```ts [a.ts]\na\n```\n@@@\n"],
+    ["unexpected prose", "````sandpack\nThis is not a file.\n````\n"],
+    [
+      "invalid preset name",
+      "````sandpack two words\n```ts [a.ts]\na\n```\n````\n",
+    ],
   ])("rejects %s", (_name, source) => {
     expect(() => parseSandpackDemos(source)).toThrow(
       /^\[slidev-addon-sandpack]/,

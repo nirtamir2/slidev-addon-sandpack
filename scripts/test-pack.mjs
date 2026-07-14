@@ -97,7 +97,7 @@ addons:
 
 # Packed addon smoke test
 
-@@@
+\`\`\`\`sandpack
 
 \`\`\`tsx [App.tsx]
 export default function App() {
@@ -105,7 +105,7 @@ export default function App() {
 }
 \`\`\`
 
-@@@
+\`\`\`\`
 `;
   writeFileSync(path.join(temporaryDirectory, "slides.md"), slides);
   run(
