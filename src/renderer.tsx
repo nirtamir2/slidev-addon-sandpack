@@ -76,6 +76,18 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
   const toggleEditing = (): void => {
     setIsEditing((current) => !current);
   };
+  const handleControlKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (
+      event.altKey ||
+      event.shiftKey ||
+      event.metaKey === event.ctrlKey ||
+      (event.key !== "ArrowLeft" && event.key !== "ArrowRight")
+    )
+      return;
+    event.preventDefault();
+    if (event.key === "ArrowLeft") goBack();
+    else goNext();
+  };
 
   return (
     <section
@@ -91,8 +103,10 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
         data-slidev-sandpack-part="controls"
         data-slidev-sandpack-state={isEditing ? "editing" : "read-only"}
         role="group"
+        onKeyDown={handleControlKeyDown}
       >
         <button
+          aria-keyshortcuts="Meta+ArrowLeft Control+ArrowLeft"
           aria-label="Previous step"
           className="slidev-sandpack__control-button slidev-sandpack__control-button--previous"
           data-slidev-sandpack-action="previous-step"
@@ -118,6 +132,7 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
           Step {currentStepIndex + 1} of {demo.steps.length}
         </span>
         <button
+          aria-keyshortcuts="Meta+ArrowRight Control+ArrowRight"
           aria-label="Next step"
           className="slidev-sandpack__control-button slidev-sandpack__control-button--next"
           data-slidev-sandpack-action="next-step"

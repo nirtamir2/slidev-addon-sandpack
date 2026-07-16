@@ -249,6 +249,89 @@ describe("sandpack demo renderer", () => {
     ).toHaveValue("step one");
   });
 
+  it("navigates steps with scoped modifier-arrow shortcuts", () => {
+    const parentKeyDown = vi.fn();
+    render(<SandpackDemoRenderer demo={createDemo()} />);
+    document.body.addEventListener("keydown", parentKeyDown);
+
+    const previous = screen.getByRole("button", { name: "Previous step" });
+    const next = screen.getByRole("button", { name: "Next step" });
+    const mode = screen.getByRole("button", { name: "Enable editing" });
+    const status = screen.getByRole("status");
+    expect(previous).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Meta+ArrowLeft Control+ArrowLeft",
+    );
+    expect(next).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Meta+ArrowRight Control+ArrowRight",
+    );
+
+    const nextEvent = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      key: "ArrowRight",
+      metaKey: true,
+    });
+    fireEvent(mode, nextEvent);
+    expect(nextEvent).toHaveProperty("defaultPrevented", true);
+    expect(status).toHaveTextContent("Step 2 of 2");
+
+    const previousEvent = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+      key: "ArrowLeft",
+    });
+    fireEvent(mode, previousEvent);
+    expect(previousEvent).toHaveProperty("defaultPrevented", true);
+    expect(status).toHaveTextContent("Step 1 of 2");
+
+    const boundaryEvent = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      key: "ArrowLeft",
+      metaKey: true,
+    });
+    fireEvent(mode, boundaryEvent);
+    expect(boundaryEvent).toHaveProperty("defaultPrevented", true);
+    expect(status).toHaveTextContent("Step 1 of 2");
+    expect(parentKeyDown).not.toHaveBeenCalled();
+    document.body.removeEventListener("keydown", parentKeyDown);
+  });
+
+  it("ignores unmodified, ambiguous, and out-of-scope arrow keys", () => {
+    render(<SandpackDemoRenderer demo={createDemo()} />);
+
+    const mode = screen.getByRole("button", { name: "Enable editing" });
+    const status = screen.getByRole("status");
+    for (const eventInit of [
+      { key: "ArrowRight" },
+      { key: "ArrowRight", metaKey: true, shiftKey: true },
+      { altKey: true, ctrlKey: true, key: "ArrowRight" },
+      { ctrlKey: true, key: "ArrowRight", metaKey: true },
+    ]) {
+      const event = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        ...eventInit,
+      });
+      fireEvent(mode, event);
+      expect(event).toHaveProperty("defaultPrevented", false);
+      expect(status).toHaveTextContent("Step 1 of 2");
+    }
+
+    const editorEvent = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      key: "ArrowRight",
+      metaKey: true,
+    });
+    fireEvent(screen.getByTestId("editor"), editorEvent);
+    expect(editorEvent).toHaveProperty("defaultPrevented", false);
+    expect(status).toHaveTextContent("Step 1 of 2");
+  });
+
   it("toggles edit mode and isolates keyboard events from Slidev", async () => {
     const user = userEvent.setup();
     const parentKeyDown = vi.fn();
