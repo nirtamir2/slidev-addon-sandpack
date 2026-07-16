@@ -23,7 +23,7 @@
   flex: 1;
 }
 
-.slidev-sandpack__controls {
+:where([data-slidev-sandpack-part="controls"]) {
   display: flex;
   min-height: 2.5rem;
   align-items: center;
@@ -35,7 +35,7 @@
   font-size: 0.75rem;
 }
 
-.slidev-sandpack__controls button {
+:where([data-slidev-sandpack-part="control-button"]) {
   min-height: 1.75rem;
   padding: 0.125rem 0.625rem;
   border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
@@ -46,21 +46,21 @@
   font: inherit;
 }
 
-.slidev-sandpack__controls button:hover:not(:disabled) {
+:where([data-slidev-sandpack-part="control-button"]:hover:not(:disabled)) {
   background: color-mix(in srgb, currentColor 9%, transparent);
 }
 
-.slidev-sandpack__controls button:focus-visible {
+:where([data-slidev-sandpack-part="control-button"]:focus-visible) {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
-.slidev-sandpack__controls button:disabled {
+:where([data-slidev-sandpack-part="control-button"]:disabled) {
   cursor: not-allowed;
   opacity: 0.45;
 }
 
-.slidev-sandpack__controls [role="status"] {
+:where([data-slidev-sandpack-part="step-status"]) {
   min-width: 5rem;
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -107,7 +107,7 @@
     height: auto !important;
   }
 
-  .slidev-sandpack__controls {
+  :where([data-slidev-sandpack-part="controls"]) {
     flex-wrap: wrap;
   }
 

@@ -159,6 +159,70 @@ describe("sandpack demo renderer", () => {
     ).toEqual(theme);
   });
 
+  it("exposes stable hooks and mirrored state on addon-owned controls", async () => {
+    const user = userEvent.setup();
+    render(<SandpackDemoRenderer demo={createDemo()} />);
+
+    const controls = screen.getByRole("group", {
+      name: "Live code controls",
+    });
+    const previous = screen.getByRole("button", { name: "Previous step" });
+    const next = screen.getByRole("button", { name: "Next step" });
+    const mode = screen.getByRole("button", { name: "Enable editing" });
+    const status = screen.getByRole("status");
+
+    expect(controls).toHaveClass("slidev-sandpack__controls");
+    expect(controls).toHaveAttribute("data-slidev-sandpack-part", "controls");
+    expect(controls).toHaveAttribute(
+      "data-slidev-sandpack-state",
+      "read-only",
+    );
+    expect(previous).toHaveClass(
+      "slidev-sandpack__control-button",
+      "slidev-sandpack__control-button--previous",
+    );
+    expect(previous).toHaveAttribute(
+      "data-slidev-sandpack-part",
+      "control-button",
+    );
+    expect(previous).toHaveAttribute(
+      "data-slidev-sandpack-action",
+      "previous-step",
+    );
+    expect(previous).toHaveAttribute("data-slidev-sandpack-state", "disabled");
+    expect(next).toHaveClass(
+      "slidev-sandpack__control-button",
+      "slidev-sandpack__control-button--next",
+    );
+    expect(next).toHaveAttribute("data-slidev-sandpack-action", "next-step");
+    expect(next).toHaveAttribute("data-slidev-sandpack-state", "enabled");
+    expect(mode).toHaveClass(
+      "slidev-sandpack__control-button",
+      "slidev-sandpack__control-button--mode",
+    );
+    expect(mode).toHaveAttribute("data-slidev-sandpack-action", "toggle-edit");
+    expect(mode).toHaveAttribute("data-slidev-sandpack-state", "read-only");
+    expect(status).toHaveClass("slidev-sandpack__step-status");
+    expect(status).toHaveAttribute(
+      "data-slidev-sandpack-part",
+      "step-status",
+    );
+    expect(status).toHaveAttribute("data-slidev-sandpack-step", "1");
+    expect(status).toHaveAttribute("data-slidev-sandpack-step-count", "2");
+
+    await user.click(next);
+    expect(previous).toHaveAttribute("data-slidev-sandpack-state", "enabled");
+    expect(next).toHaveAttribute("data-slidev-sandpack-state", "disabled");
+    expect(status).toHaveAttribute("data-slidev-sandpack-step", "2");
+
+    await user.click(mode);
+    expect(controls).toHaveAttribute(
+      "data-slidev-sandpack-state",
+      "editing",
+    );
+    expect(mode).toHaveAttribute("data-slidev-sandpack-state", "editing");
+  });
+
   it("navigates within boundaries and restores canonical step snapshots", async () => {
     const user = userEvent.setup();
     render(<SandpackDemoRenderer demo={createDemo()} />);

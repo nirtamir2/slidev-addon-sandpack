@@ -2,6 +2,26 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 describe("sandpack layout styles", () => {
+  it("styles controls through zero-specificity data hooks", async () => {
+    const styles = await readFile(
+      new URL("../styles/sandpack.css", import.meta.url),
+      "utf8",
+    );
+
+    expect(styles).toContain(
+      ':where([data-slidev-sandpack-part="controls"])',
+    );
+    expect(styles).toContain(
+      ':where([data-slidev-sandpack-part="control-button"])',
+    );
+    expect(styles).toContain(
+      ':where([data-slidev-sandpack-part="step-status"])',
+    );
+    expect(styles).not.toContain(".slidev-sandpack__controls");
+    expect(styles).not.toContain(".slidev-sandpack__control-button");
+    expect(styles).not.toContain(".slidev-sandpack__step-status");
+  });
+
   it("fills the available slide height", async () => {
     const styles = await readFile(
       new URL("../styles/sandpack.css", import.meta.url),
