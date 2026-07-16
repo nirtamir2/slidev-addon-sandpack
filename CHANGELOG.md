@@ -2,6 +2,13 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.5.1 - 2026-07-17
+
+### Fixed
+
+- Keep the Sandpack editor and preview side by side in production builds when
+  Sandpack's runtime styles load after the addon's stylesheet.
+
 ## 0.5.0 - 2026-07-16
 
 ### Added
