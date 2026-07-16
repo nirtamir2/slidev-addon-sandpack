@@ -1,12 +1,10 @@
-# Sandpack 0.4.0 task list
+# Icon-only Sandpack controls task list
 
-- [x] Task 1: Prove and implement the dark omitted-theme default.
-- [x] Task 2: Add stable control hooks and zero-specificity defaults.
-- [x] Checkpoint: Commit and verify the theme/styling contract.
-- [x] Task 3: Add scoped modifier-arrow navigation.
-- [x] Task 4: Document the public contract and prepare version 0.4.0.
-- [x] Checkpoint: Pass full Node 24, React 18/19, package, and audit checks.
-- [ ] Task 5: Review, merge, release, and verify npm provenance.
-- [ ] Task 6: Upgrade and build the talks deck against the published package.
-- [ ] Task 7: Browser-test, screenshot, review, and merge the talks update.
-- [ ] Checkpoint: Confirm both repositories are clean on merged main.
+- [ ] Task 1: Add failing icon, accessibility, shortcut-removal, and style contract tests.
+- [ ] Task 2: Render inline SVG controls and delete modifier-arrow shortcuts.
+- [ ] Checkpoint: Verify behavior, accessibility, and public hooks.
+- [ ] Task 3: Add reliable compact square button and icon styling.
+- [ ] Task 4: Update current runtime-control documentation.
+- [ ] Checkpoint: Confirm the complete icon-control contract is consistent.
+- [ ] Task 5: Run Node 24 package checks and real-browser verification.
+- [ ] Checkpoint: Confirm the branch is clean and ready for review.
