@@ -97,13 +97,13 @@ the default.
 
 The contract applies only to the addon's live code control bar:
 
-| Element | Empty CSS hooks | Stable data attributes |
-| --- | --- | --- |
-| Control group | `slidev-sandpack__controls` | `data-slidev-sandpack-part="controls"`, `data-slidev-sandpack-state="read-only|editing"` |
-| Previous button | `slidev-sandpack__control-button slidev-sandpack__control-button--previous` | `data-slidev-sandpack-part="control-button"`, `data-slidev-sandpack-action="previous-step"`, `data-slidev-sandpack-state="enabled|disabled"` |
-| Next button | `slidev-sandpack__control-button slidev-sandpack__control-button--next` | `data-slidev-sandpack-part="control-button"`, `data-slidev-sandpack-action="next-step"`, `data-slidev-sandpack-state="enabled|disabled"` |
-| Mode button | `slidev-sandpack__control-button slidev-sandpack__control-button--mode` | `data-slidev-sandpack-part="control-button"`, `data-slidev-sandpack-action="toggle-edit"`, `data-slidev-sandpack-state="read-only|editing"` |
-| Step status | `slidev-sandpack__step-status` | `data-slidev-sandpack-part="step-status"`, `data-slidev-sandpack-step`, `data-slidev-sandpack-step-count` |
+| Element         | Empty CSS hooks                                                             | Stable data attributes                                                                                        |
+| --------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Control group   | `slidev-sandpack__controls`                                                 | `data-slidev-sandpack-part="controls"`; state is `read-only` or `editing`                                     |
+| Previous button | `slidev-sandpack__control-button slidev-sandpack__control-button--previous` | part `control-button`; action `previous-step`; state `enabled` or `disabled`                                  |
+| Next button     | `slidev-sandpack__control-button slidev-sandpack__control-button--next`     | part `control-button`; action `next-step`; state `enabled` or `disabled`                                      |
+| Mode button     | `slidev-sandpack__control-button slidev-sandpack__control-button--mode`     | part `control-button`; action `toggle-edit`; state `read-only` or `editing`                                   |
+| Step status     | `slidev-sandpack__step-status`                                              | `data-slidev-sandpack-part="step-status"`, `data-slidev-sandpack-step`, and `data-slidev-sandpack-step-count` |
 
 Native `disabled` and ARIA attributes remain the behavioral and accessibility
 source of truth. Mirrored data states exist for CSS and tests. Existing control
