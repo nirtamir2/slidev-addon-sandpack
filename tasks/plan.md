@@ -27,7 +27,7 @@ resolution, validation, and renderer behavior before documentation is updated.
 
 ### Phase 1: Public contract and resolution
 
-- [ ] Task 1: Add the typed theme configuration, build-time validation, and
+- [x] Task 1: Add the typed theme configuration, build-time validation, and
       resolved demo data through a red-green test cycle.
 
 ### Phase 2: Renderer integration

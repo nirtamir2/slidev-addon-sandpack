@@ -13,6 +13,7 @@ import type {
   SandpackPredefinedTemplate,
   SandpackPreset,
   SandpackPresetFile,
+  SandpackThemeProp,
 } from "./types.js";
 
 const ERROR_PREFIX = "[slidev-addon-sandpack]";
@@ -47,6 +48,15 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 function isBuiltinTemplate(name: string): name is SandpackPredefinedTemplate {
   return Object.hasOwn(SANDBOX_TEMPLATES, name);
+}
+
+function resolveTheme(value: unknown): SandpackThemeProp {
+  if (value === undefined) return "auto";
+  if (value === "auto" || value === "light" || value === "dark") return value;
+  if (isObject(value)) return value as SandpackThemeProp;
+  throw presetError(
+    'Sandpack theme must be "auto", "light", "dark", or a custom theme object.',
+  );
 }
 
 function emptyPreset(template: SandpackPredefinedTemplate): MergedPreset {
@@ -329,6 +339,7 @@ export async function resolveSandpackDemo(
     typeof config.defaultPreset !== "string"
   )
     throw presetError("`defaultPreset` must be a string.");
+  const theme = resolveTheme(config.theme);
 
   const presetName =
     parsed.presetName ?? config.defaultPreset ?? DEFAULT_TEMPLATE;
@@ -368,6 +379,7 @@ export async function resolveSandpackDemo(
       presetName,
       steps,
       template: preset.template,
+      theme,
     },
     sourceFiles: [...sourceFiles],
   };

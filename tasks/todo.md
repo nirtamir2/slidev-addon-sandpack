@@ -9,18 +9,18 @@ resolved-data changes that make them pass.
 
 **Acceptance criteria:**
 
-- [ ] `SandpackConfig.theme` accepts `"auto"`, `"light"`, `"dark"`, and partial
+- [x] `SandpackConfig.theme` accepts `"auto"`, `"light"`, `"dark"`, and partial
       custom theme objects while rejecting unsupported strings.
-- [ ] `SandpackThemeProp` is exported from the addon package root, and
+- [x] `SandpackThemeProp` is exported from the addon package root, and
       `SandpackDemo.theme` remains optional.
-- [ ] Resolution retains a configured theme, defaults omission to `"auto"`, and
+- [x] Resolution retains a configured theme, defaults omission to `"auto"`, and
       rejects invalid top-level values with the specified addon-prefixed error.
 
 **Verification:**
 
-- [ ] Observe the new focused assertions fail before production code changes.
-- [ ] Run `pnpm exec vitest run test/presets.test.ts`.
-- [ ] Run `pnpm run typecheck`.
+- [x] Observe the new focused assertions fail before production code changes.
+- [x] Run `pnpm exec vitest run test/presets.test.ts`.
+- [x] Run `pnpm run typecheck`.
 
 **Dependencies:** None.
 

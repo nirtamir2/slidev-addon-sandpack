@@ -1,8 +1,12 @@
-import type { SandpackPredefinedTemplate } from "@codesandbox/sandpack-react";
+import type {
+  SandpackPredefinedTemplate,
+  SandpackThemeProp,
+} from "@codesandbox/sandpack-react";
 
 export interface SandpackConfig {
   defaultPreset?: string;
   presets?: Record<string, SandpackPreset>;
+  theme?: SandpackThemeProp;
 }
 
 export interface SandpackPreset {
@@ -67,6 +71,7 @@ export interface SandpackDemo {
   entry?: string;
   layout: ResolvedSandpackLayout;
   steps: Array<SandpackDemoStep>;
+  theme?: SandpackThemeProp;
 }
 
 /**
@@ -78,4 +83,7 @@ export function defineSandpackConfig<const Config extends SandpackConfig>(
   return config;
 }
 
-export type { SandpackPredefinedTemplate } from "@codesandbox/sandpack-react";
+export type {
+  SandpackPredefinedTemplate,
+  SandpackThemeProp,
+} from "@codesandbox/sandpack-react";

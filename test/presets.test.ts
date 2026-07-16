@@ -104,7 +104,46 @@ describe("resolveSandpackDemo", () => {
     expect(demo.template).toBe("vanilla-ts");
   });
 
+  it("retains a deck-level custom theme in the resolved demo", async () => {
+    const theme = {
+      colors: { accent: "rebeccapurple" },
+      syntax: { tag: "#006400" },
+    };
+
+    const { demo } = await resolveSandpackDemo(
+      parseDemo("react-ts"),
+      { theme } satisfies SandpackConfig,
+      { configFile },
+    );
+
+    expect(demo.theme).toEqual(theme);
+  });
+
+  it("defaults the resolved theme to auto", async () => {
+    const { demo } = await resolveSandpackDemo(
+      parseDemo("react-ts"),
+      {},
+      { configFile },
+    );
+
+    expect(demo.theme).toBe("auto");
+  });
+
   it.each([
+    {
+      name: "unknown theme string",
+      parsed: parseDemo("react-ts"),
+      config: { theme: "amethyst" },
+      message:
+        /^\[slidev-addon-sandpack] Sandpack theme must be "auto", "light", "dark", or a custom theme object\.$/,
+    },
+    {
+      name: "array theme",
+      parsed: parseDemo("react-ts"),
+      config: { theme: [] },
+      message:
+        /^\[slidev-addon-sandpack] Sandpack theme must be "auto", "light", "dark", or a custom theme object\.$/,
+    },
     {
       name: "unknown preset",
       parsed: parseDemo("missing"),
