@@ -187,18 +187,50 @@ describe("sandpack demo renderer", () => {
       "previous-step",
     );
     expect(previous).toHaveAttribute("data-slidev-sandpack-state", "disabled");
+    expect(previous).toHaveAttribute("title", "Previous step");
+    expect(previous).not.toHaveAttribute("aria-keyshortcuts");
+    expect(previous.textContent).toBe("");
+    expect(previous.querySelector("svg")).toHaveClass(
+      "slidev-sandpack__control-icon",
+    );
+    expect(previous.querySelector("svg")).toHaveAttribute(
+      "data-slidev-sandpack-icon",
+      "arrow-left",
+    );
+    expect(previous.querySelector("svg")).toHaveAttribute(
+      "data-slidev-sandpack-part",
+      "control-icon",
+    );
+    expect(previous.querySelector("svg")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(previous.querySelector("svg")).toHaveAttribute("focusable", "false");
     expect(next).toHaveClass(
       "slidev-sandpack__control-button",
       "slidev-sandpack__control-button--next",
     );
     expect(next).toHaveAttribute("data-slidev-sandpack-action", "next-step");
     expect(next).toHaveAttribute("data-slidev-sandpack-state", "enabled");
+    expect(next).toHaveAttribute("title", "Next step");
+    expect(next).not.toHaveAttribute("aria-keyshortcuts");
+    expect(next.textContent).toBe("");
+    expect(next.querySelector("svg")).toHaveAttribute(
+      "data-slidev-sandpack-icon",
+      "arrow-right",
+    );
     expect(mode).toHaveClass(
       "slidev-sandpack__control-button",
       "slidev-sandpack__control-button--mode",
     );
     expect(mode).toHaveAttribute("data-slidev-sandpack-action", "toggle-edit");
     expect(mode).toHaveAttribute("data-slidev-sandpack-state", "read-only");
+    expect(mode).toHaveAttribute("title", "Enable editing");
+    expect(mode.textContent).toBe("");
+    expect(mode.querySelector("svg")).toHaveAttribute(
+      "data-slidev-sandpack-icon",
+      "pencil",
+    );
     expect(status).toHaveClass("slidev-sandpack__step-status");
     expect(status).toHaveAttribute("data-slidev-sandpack-part", "step-status");
     expect(status).toHaveAttribute("data-slidev-sandpack-step", "1");
@@ -212,6 +244,13 @@ describe("sandpack demo renderer", () => {
     await user.click(mode);
     expect(controls).toHaveAttribute("data-slidev-sandpack-state", "editing");
     expect(mode).toHaveAttribute("data-slidev-sandpack-state", "editing");
+    expect(mode).toHaveAttribute("aria-label", "Use read-only mode");
+    expect(mode).toHaveAttribute("title", "Use read-only mode");
+    expect(mode.textContent).toBe("");
+    expect(mode.querySelector("svg")).toHaveAttribute(
+      "data-slidev-sandpack-icon",
+      "lock",
+    );
   });
 
   it("navigates within boundaries and restores canonical step snapshots", async () => {
@@ -240,7 +279,7 @@ describe("sandpack demo renderer", () => {
     ).toHaveValue("step one");
   });
 
-  it("navigates steps with scoped modifier-arrow shortcuts", () => {
+  it("does not advertise or handle modifier-arrow step shortcuts", () => {
     const parentKeyDown = vi.fn();
     render(<SandpackDemoRenderer demo={createDemo()} />);
     document.body.addEventListener("keydown", parentKeyDown);
@@ -249,14 +288,8 @@ describe("sandpack demo renderer", () => {
     const next = screen.getByRole("button", { name: "Next step" });
     const mode = screen.getByRole("button", { name: "Enable editing" });
     const status = screen.getByRole("status");
-    expect(previous).toHaveAttribute(
-      "aria-keyshortcuts",
-      "Meta+ArrowLeft Control+ArrowLeft",
-    );
-    expect(next).toHaveAttribute(
-      "aria-keyshortcuts",
-      "Meta+ArrowRight Control+ArrowRight",
-    );
+    expect(previous).not.toHaveAttribute("aria-keyshortcuts");
+    expect(next).not.toHaveAttribute("aria-keyshortcuts");
 
     const nextEvent = new KeyboardEvent("keydown", {
       bubbles: true,
@@ -265,8 +298,8 @@ describe("sandpack demo renderer", () => {
       metaKey: true,
     });
     fireEvent(mode, nextEvent);
-    expect(nextEvent).toHaveProperty("defaultPrevented", true);
-    expect(status).toHaveTextContent("Step 2 of 2");
+    expect(nextEvent).toHaveProperty("defaultPrevented", false);
+    expect(status).toHaveTextContent("Step 1 of 2");
 
     const previousEvent = new KeyboardEvent("keydown", {
       bubbles: true,
@@ -275,51 +308,26 @@ describe("sandpack demo renderer", () => {
       key: "ArrowLeft",
     });
     fireEvent(mode, previousEvent);
-    expect(previousEvent).toHaveProperty("defaultPrevented", true);
-    expect(status).toHaveTextContent("Step 1 of 2");
-
-    const boundaryEvent = new KeyboardEvent("keydown", {
-      bubbles: true,
-      cancelable: true,
-      key: "ArrowLeft",
-      metaKey: true,
-    });
-    fireEvent(mode, boundaryEvent);
-    expect(boundaryEvent).toHaveProperty("defaultPrevented", true);
+    expect(previousEvent).toHaveProperty("defaultPrevented", false);
     expect(status).toHaveTextContent("Step 1 of 2");
     expect(parentKeyDown).not.toHaveBeenCalled();
     document.body.removeEventListener("keydown", parentKeyDown);
   });
 
-  it("ignores unmodified, ambiguous, and out-of-scope arrow keys", () => {
+  it("activates step controls with Enter and Space", async () => {
+    const user = userEvent.setup();
     render(<SandpackDemoRenderer demo={createDemo()} />);
 
-    const mode = screen.getByRole("button", { name: "Enable editing" });
+    const previous = screen.getByRole("button", { name: "Previous step" });
+    const next = screen.getByRole("button", { name: "Next step" });
     const status = screen.getByRole("status");
-    for (const eventInit of [
-      { key: "ArrowRight" },
-      { key: "ArrowRight", metaKey: true, shiftKey: true },
-      { altKey: true, ctrlKey: true, key: "ArrowRight" },
-      { ctrlKey: true, key: "ArrowRight", metaKey: true },
-    ]) {
-      const event = new KeyboardEvent("keydown", {
-        bubbles: true,
-        cancelable: true,
-        ...eventInit,
-      });
-      fireEvent(mode, event);
-      expect(event).toHaveProperty("defaultPrevented", false);
-      expect(status).toHaveTextContent("Step 1 of 2");
-    }
 
-    const editorEvent = new KeyboardEvent("keydown", {
-      bubbles: true,
-      cancelable: true,
-      key: "ArrowRight",
-      metaKey: true,
-    });
-    fireEvent(screen.getByTestId("editor"), editorEvent);
-    expect(editorEvent).toHaveProperty("defaultPrevented", false);
+    next.focus();
+    await user.keyboard("{Enter}");
+    expect(status).toHaveTextContent("Step 2 of 2");
+
+    previous.focus();
+    await user.keyboard(" ");
     expect(status).toHaveTextContent("Step 1 of 2");
   });
 

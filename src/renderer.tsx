@@ -17,6 +17,66 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
+function ControlIcon({
+  children,
+  name,
+}: {
+  children: ReactNode;
+  name: string;
+}) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="slidev-sandpack__control-icon"
+      data-slidev-sandpack-icon={name}
+      data-slidev-sandpack-part="control-icon"
+      fill="none"
+      focusable="false"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <ControlIcon name="arrow-left">
+      <path d="m15 18-6-6 6-6" />
+    </ControlIcon>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <ControlIcon name="arrow-right">
+      <path d="m9 6 6 6-6 6" />
+    </ControlIcon>
+  );
+}
+
+function LockIcon() {
+  return (
+    <ControlIcon name="lock">
+      <rect width="14" height="10" x="5" y="11" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </ControlIcon>
+  );
+}
+
+function PencilIcon() {
+  return (
+    <ControlIcon name="pencil">
+      <path d="m14 5 5 5L8 21H3v-5Z" />
+      <path d="m12 7 5 5" />
+    </ControlIcon>
+  );
+}
+
 export class SandpackErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
@@ -76,18 +136,7 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
   const toggleEditing = (): void => {
     setIsEditing((current) => !current);
   };
-  const handleControlKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (
-      event.altKey ||
-      event.shiftKey ||
-      event.metaKey === event.ctrlKey ||
-      (event.key !== "ArrowLeft" && event.key !== "ArrowRight")
-    )
-      return;
-    event.preventDefault();
-    if (event.key === "ArrowLeft") goBack();
-    else goNext();
-  };
+  const modeActionLabel = isEditing ? "Use read-only mode" : "Enable editing";
 
   return (
     <section
@@ -103,10 +152,8 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
         data-slidev-sandpack-part="controls"
         data-slidev-sandpack-state={isEditing ? "editing" : "read-only"}
         role="group"
-        onKeyDown={handleControlKeyDown}
       >
         <button
-          aria-keyshortcuts="Meta+ArrowLeft Control+ArrowLeft"
           aria-label="Previous step"
           className="slidev-sandpack__control-button slidev-sandpack__control-button--previous"
           data-slidev-sandpack-action="previous-step"
@@ -115,10 +162,11 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
             currentStepIndex === 0 ? "disabled" : "enabled"
           }
           disabled={currentStepIndex === 0}
+          title="Previous step"
           type="button"
           onClick={goBack}
         >
-          Previous
+          <ArrowLeftIcon />
         </button>
         <span
           aria-atomic="true"
@@ -132,7 +180,6 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
           Step {currentStepIndex + 1} of {demo.steps.length}
         </span>
         <button
-          aria-keyshortcuts="Meta+ArrowRight Control+ArrowRight"
           aria-label="Next step"
           className="slidev-sandpack__control-button slidev-sandpack__control-button--next"
           data-slidev-sandpack-action="next-step"
@@ -141,22 +188,24 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
             currentStepIndex === lastStepIndex ? "disabled" : "enabled"
           }
           disabled={currentStepIndex === lastStepIndex}
+          title="Next step"
           type="button"
           onClick={goNext}
         >
-          Next
+          <ArrowRightIcon />
         </button>
         <button
-          aria-label={isEditing ? "Use read-only mode" : "Enable editing"}
+          aria-label={modeActionLabel}
           aria-pressed={isEditing}
           className="slidev-sandpack__control-button slidev-sandpack__control-button--mode"
           data-slidev-sandpack-action="toggle-edit"
           data-slidev-sandpack-part="control-button"
           data-slidev-sandpack-state={isEditing ? "editing" : "read-only"}
+          title={modeActionLabel}
           type="button"
           onClick={toggleEditing}
         >
-          {isEditing ? "Editing" : "Read only"}
+          {isEditing ? <LockIcon /> : <PencilIcon />}
         </button>
       </div>
 
