@@ -1,205 +1,215 @@
-# Implementation Plan: Icon-only Sandpack controls
+# Implementation Plan: Production Sandpack layout wrap fix
 
 ## Overview
 
-Replace every visible header-button label with a self-contained inline SVG,
-remove the unsuccessful modifier-arrow shortcuts, and make the compact square
-button styling survive Slidev's generic button reset. Preserve accessible
-names, mode behavior, public class/data hooks, and the visible step status.
+Make the addon-owned Sandpack workspace keep its editor and preview on one flex
+line regardless of whether Vite development CSS or the production bundle loads
+first. Prove the regression test fails before the fix, verify the built runtime
+in a real browser, publish patch release 0.5.1, and upgrade the real R3F talk.
 
 ## Architecture decisions
 
-- Keep icon components private to the renderer and use `currentColor`; do not
-  add an icon dependency or public icon API.
-- Treat icons as decorative. Native buttons retain action-oriented
-  `aria-label` and matching `title` values.
-- Show action icons on the mode button: lock while editing and pencil while
-  read-only.
-- Remove shortcut handling and `aria-keyshortcuts` without replacing them.
-  Keep the existing Sandpack-root propagation boundary that isolates editor
-  input from Slidev.
-- Raise only the bundled button selectors to element-level specificity. The
-  public consumer class remains more specific and can override defaults.
+- Strengthen the existing workspace selector to
+  `.slidev-sandpack__workspace.sp-layout`; do not add `!important` or change
+  editor/preview percentages.
+- Treat production-bundle browser behavior as the authoritative regression
+  check because `slidev dev` reverses the relevant stylesheet order.
+- Ship the correction as patch release 0.5.1 and consume only the published npm
+  artifact from `../talks`.
 
 ## Dependency graph
 
 ```text
-Renderer and stylesheet contract tests
-        |
-        v
-Icon-only renderer and shortcut removal
-        |
-        v
-Square button and icon styling
-        |
-        v
-Runtime documentation
-        |
-        v
-Full package checks and real-browser verification
+Failing style contract
+  -> stronger workspace selector
+    -> addon verification and production-browser proof
+      -> 0.5.1 metadata and release
+        -> talks dependency upgrade
+          -> hosted production verification
 ```
 
-## Task 1: Encode the icon-control contract
+## Task 1: Add the failing specificity regression
 
-**Description:** Update focused renderer and stylesheet tests first so the new
-visual, accessibility, keyboard-removal, and override requirements fail against
-the current implementation.
+**Description:** Update the style contract to require the combined workspace
+and Sandpack layout classes on the rule that owns `flex-wrap: nowrap`.
 
 **Acceptance criteria:**
 
-- [ ] Tests require icon-only button contents with preserved accessible names.
-- [ ] Tests require action-based mode icon changes and retained state hooks.
-- [ ] Tests prove modifier-arrow events no longer navigate or advertise shortcuts.
+- [ ] The test describes protection from Sandpack's later runtime style.
+- [ ] The assertion requires `.slidev-sandpack__workspace.sp-layout`.
+- [ ] The targeted test fails against the current single-class selector.
 
 **Verification:**
 
-- [ ] Focused Vitest run fails for the expected old text/shortcut behavior.
-- [ ] Test diff contains no production implementation.
+- [ ] Run `pnpm exec vitest run test/styles.test.ts` on Node 24 and capture the
+      expected failure.
 
-**Dependencies:** None
+**Dependencies:** None.
 
 **Files likely touched:**
 
-- `test/renderer.test.tsx`
 - `test/styles.test.ts`
 
-**Estimated scope:** Small
+**Estimated scope:** XS.
 
-## Task 2: Render icons and remove shortcuts
+## Task 2: Strengthen the workspace selector
 
-**Description:** Add four small private inline SVG components, render them in
-the existing buttons, preserve action/state semantics, and delete the scoped
-modifier-arrow implementation.
-
-**Acceptance criteria:**
-
-- [ ] Previous and next render left/right arrows with no visible text.
-- [ ] Mode renders lock while editing and pencil while read-only.
-- [ ] SVGs are decorative while buttons retain labels, tooltips, and behavior.
-- [ ] Shortcut handler and `aria-keyshortcuts` are absent.
-
-**Verification:**
-
-- [ ] `pnpm exec vitest run test/renderer.test.tsx` passes on Node 24.
-- [ ] `pnpm run typecheck` passes on Node 24.
-
-**Dependencies:** Task 1
-
-**Files likely touched:**
-
-- `src/renderer.tsx`
-- `test/renderer.test.tsx`
-
-**Estimated scope:** Medium
-
-## Checkpoint: Behavior and accessibility
-
-- [ ] Tasks 1 and 2 are committed as tested increments.
-- [ ] Buttons work through click, Enter, and Space.
-- [ ] Public classes, data states, disabled states, and edit-mode behavior remain intact.
-
-## Task 3: Make icon-button styles reliable
-
-**Description:** Convert the addon buttons to compact squares, size and center
-their SVGs, and use low but sufficient selector specificity to beat Slidev's
-generic button reset without weakening consumer overrides.
+**Description:** Apply the minimum CSS change so the addon rule outranks
+Sandpack's generated single-class rule independent of injection order.
 
 **Acceptance criteria:**
 
-- [ ] Buttons have explicit square dimensions, centered icons, and compact padding.
-- [ ] SVGs inherit color and cannot intercept pointer events.
-- [ ] Bundled selectors do not target the public consumer classes.
-- [ ] A normal consumer class selector can still override every default.
+- [ ] The selector is `.slidev-sandpack__workspace.sp-layout`.
+- [ ] Existing workspace and child sizing declarations are unchanged.
+- [ ] No `!important` is added to `flex-wrap`.
 
 **Verification:**
 
-- [ ] `pnpm exec vitest run test/styles.test.ts` passes.
+- [ ] `pnpm exec vitest run test/styles.test.ts` passes on Node 24.
 - [ ] `git diff --check` passes.
 
-**Dependencies:** Task 2
+**Dependencies:** Task 1.
 
 **Files likely touched:**
 
 - `styles/sandpack.css`
-- `test/styles.test.ts`
 
-**Estimated scope:** Small
+**Estimated scope:** XS.
 
-## Task 4: Update the public control documentation
+## Checkpoint: Regression contract
 
-**Description:** Remove the shortcut claim and describe the icon-only controls,
-action-based mode glyphs, preserved labels, and styling hooks without rewriting
-historical release notes.
+- [ ] The test was observed failing before the implementation.
+- [ ] The targeted test passes after the implementation.
+- [ ] The diff contains only the test and minimum selector change.
+
+## Task 3: Verify the addon and production bundle
+
+**Description:** Run the complete addon gates and prove the compiled example
+uses `nowrap` after Sandpack injects its runtime stylesheet.
 
 **Acceptance criteria:**
 
-- [ ] README no longer advertises a code-step shortcut.
-- [ ] README explains the arrow and mode icons and their accessible names.
-- [ ] No current-behavior documentation contradicts the renderer.
+- [ ] Formatting, lint, types, all tests, and example production build pass.
+- [ ] React 18 and React 19 isolated package consumers pass.
+- [ ] Production dependency audit reports no high-severity vulnerabilities.
+- [ ] Built example computes `flex-wrap: nowrap`; editor and preview have the
+      same vertical position and retain their horizontal split.
 
 **Verification:**
 
-- [ ] `rg` finds no current shortcut claim outside historical release material.
-- [ ] `pnpm run format:check` passes on Node 24.
+- [ ] `pnpm run check`
+- [ ] `pnpm run test:pack`
+- [ ] `REACT_VERSION=18.3.1 pnpm run test:pack`
+- [ ] `pnpm run audit:prod`
+- [ ] Serve `example-dist` and inspect the workspace with Chrome DevTools.
 
-**Dependencies:** Task 3
+**Dependencies:** Task 2.
+
+**Files likely touched:** None beyond generated, ignored build output.
+
+**Estimated scope:** S.
+
+## Task 4: Prepare and publish 0.5.1
+
+**Description:** Record the user-visible production fix, update the package
+version, repeat the release gate, and ship through trusted publishing.
+
+**Acceptance criteria:**
+
+- [ ] `package.json` and `CHANGELOG.md` describe version 0.5.1.
+- [ ] The release commit is reviewed and merged through a green PR.
+- [ ] GitHub release tag `v0.5.1` targets the exact verified merge commit.
+- [ ] npm reports `slidev-addon-sandpack@0.5.1` as `latest`.
+
+**Verification:**
+
+- [ ] Repeat the documented release checklist on Node 24 after metadata changes.
+- [ ] Wait for PR CI, post-merge CI, and the Publish workflow to succeed.
+- [ ] Query npm and the remote tag after publication.
+
+**Dependencies:** Task 3.
 
 **Files likely touched:**
 
-- `README.md`
+- `package.json`
+- `CHANGELOG.md`
 
-**Estimated scope:** Small
+**Estimated scope:** S.
 
-## Checkpoint: Release candidate
+## Checkpoint: Published addon
 
-- [ ] Icon markup, behavior, styles, and docs form one consistent contract.
-- [ ] Focused renderer and stylesheet suites pass.
-- [ ] No unrelated files are changed.
+- [ ] Main, tag, GitHub release, and npm all identify the same 0.5.1 commit.
+- [ ] The addon repository is clean on `main`.
 
-## Task 5: Verify the package and live Slidev UI
+## Task 5: Upgrade and verify the R3F talk
 
-**Description:** Run the complete Node 24 quality gates, packed-consumer checks,
-and production audit, then inspect a real Slidev Sandpack demo at desktop size
-and capture screenshot evidence.
+**Description:** Consume the published patch in `../talks`, refresh its
+lockfile, build the real deck, and send the two-file change through its PR and
+Netlify checks.
 
 **Acceptance criteria:**
 
-- [ ] The full repository check, React 18/19 packed consumers, and production audit pass.
-- [ ] Browser inspection shows icon-only buttons, working mode/step actions, and dark rendering.
-- [ ] Computed button dimensions/padding are non-zero and Slidev does not override them.
-- [ ] Browser console has no new addon errors.
+- [ ] The R3F talk depends on `slidev-addon-sandpack@^0.5.1`.
+- [ ] The lockfile resolves the published 0.5.1 integrity.
+- [ ] The R3F production build passes on Node 24.
+- [ ] The talks PR and Netlify preview pass and merge to `main`.
 
 **Verification:**
 
-- [ ] `pnpm run check` passes on Node 24.
-- [ ] `pnpm run test:pack` passes on Node 24.
-- [ ] `REACT_VERSION=18.3.1 pnpm run test:pack` passes on Node 24.
-- [ ] `pnpm run audit:prod` passes on Node 24.
-- [ ] A real-browser screenshot and DOM/computed-style evidence are retained.
+- [ ] Confirm the installed package reports version 0.5.1.
+- [ ] Run `pnpm --filter react-three-fiber-talk run build` on Node 24.
+- [ ] Serve the production output and verify the editor/preview positions.
 
-**Dependencies:** Task 4 and release-candidate checkpoint
+**Dependencies:** Task 4.
 
-**Files likely touched:** None beyond verification artifacts outside the repository
+**Files likely touched:**
 
-**Estimated scope:** Small
+- `../talks/2025-12-15/src/package.json`
+- `../talks/pnpm-lock.yaml`
+
+**Estimated scope:** S.
+
+## Task 6: Verify hosted production
+
+**Description:** Wait for the merged talks deployment and inspect the public
+R3F slide rather than assuming the repository merge reached production.
+
+**Acceptance criteria:**
+
+- [ ] The hosted workspace computes `flex-wrap: nowrap`.
+- [ ] Editor and preview share the same vertical position and render side by
+      side at the reproduced 1080 CSS-pixel viewport.
+- [ ] No new addon console errors appear.
+- [ ] Both repositories are clean and synchronized with `origin/main`.
+
+**Verification:**
+
+- [ ] Inspect `https://talks.nirtamir.com/2025/react-next/16` with Chrome
+      DevTools after deployment.
+- [ ] Check final Git, GitHub release, and npm state.
+
+**Dependencies:** Task 5.
+
+**Files likely touched:** None.
+
+**Estimated scope:** XS.
 
 ## Checkpoint: Complete
 
-- [ ] All approved design requirements are satisfied.
-- [ ] All automated and browser checks pass.
-- [ ] Branch is clean, reviewable, and ready for a PR or release decision.
+- [ ] All success criteria in the approved design are met.
+- [ ] The original production failure is verified fixed end to end.
+- [ ] Release and rollback references are documented in the handoff.
 
 ## Risks and mitigations
 
-| Risk                                           | Impact | Mitigation                                                                                        |
-| ---------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
-| Icon-only controls lose accessible meaning     | High   | Keep native action labels/tooltips and test them by role.                                         |
-| Mode icon communicates state instead of action | Medium | Test lock in editing and pencil in read-only explicitly.                                          |
-| Slidev still removes button padding            | High   | Raise default selectors only to element specificity and inspect computed styles in the real deck. |
-| Consumer overrides become harder               | High   | Keep public classes out of bundled selectors and assert class specificity remains higher.         |
-| Shortcut behavior remains in docs or DOM       | Medium | Search docs and assert `aria-keyshortcuts`/navigation are absent.                                 |
+| Risk                                                      | Impact | Mitigation                                                                   |
+| --------------------------------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| A static CSS test passes while runtime order still breaks | High   | Inspect a built production page and compare computed styles and geometry.    |
+| `!important` reduces consumer control                     | Medium | Use the approved two-class selector instead.                                 |
+| npm or Netlify propagation delays verification            | Medium | Poll authoritative npm and hosted runtime state before declaring completion. |
+| Development-only testing masks the regression again       | High   | Make production-bundle inspection an explicit release gate.                  |
 
 ## Open questions
 
-None. The approved design resolves icon semantics, keyboard behavior, visible
-text, accessibility, styling, and scope.
+None. The approved design fixes the addon and publishes a patch before updating
+the consuming talk.
