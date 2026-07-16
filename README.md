@@ -122,8 +122,8 @@ export default defineSandpackConfig({
 ```
 
 The top-level `theme` applies to every demo in the deck. It accepts Sandpack's
-`"auto"` (the default), `"light"`, or `"dark"` mode, as well as native custom
-theme objects. Catalog themes from `@codesandbox/sandpack-themes` can be
+`"dark"` (the default), `"auto"` adaptive mode, or `"light"`, as well as native
+custom theme objects. Catalog themes from `@codesandbox/sandpack-themes` can be
 installed separately and passed as objects. See the
 [preset guide](./docs/presets.md#deck-theme) for examples.
 
@@ -151,9 +151,46 @@ Every demo provides:
 
 - Previous/next step controls with boundary states and a live step announcement.
 - Read-only and editable modes.
+- Command+Left/Right step shortcuts on macOS and Control+Left/Right elsewhere
+  while focus is within the addon controls.
 - Sandpack file tabs, editor diagnostics, and preview refresh controls.
 - Keyboard isolation so editor input does not trigger Slidev navigation.
 - A contained error state if the embedded renderer fails.
+
+### Customize addon controls
+
+The addon-owned control bar exposes semantic data attributes and empty CSS
+classes. Bundled control styles use zero-specificity `:where(...)` selectors,
+so a normal consumer class selector overrides them without `!important` or
+specificity escalation.
+
+| Element         | CSS hook                                     | Data contract                                                          |
+| --------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
+| Control group   | `.slidev-sandpack__controls`                 | `data-slidev-sandpack-part="controls"`, state `read-only` or `editing` |
+| All buttons     | `.slidev-sandpack__control-button`           | part `control-button`, action, and state attributes                    |
+| Previous button | `.slidev-sandpack__control-button--previous` | action `previous-step`, state `enabled` or `disabled`                  |
+| Next button     | `.slidev-sandpack__control-button--next`     | action `next-step`, state `enabled` or `disabled`                      |
+| Mode button     | `.slidev-sandpack__control-button--mode`     | action `toggle-edit`, state `read-only` or `editing`                   |
+| Step status     | `.slidev-sandpack__step-status`              | part `step-status`, current step, and step count                       |
+
+Every action and state value is available through
+`data-slidev-sandpack-action` and `data-slidev-sandpack-state`. The status uses
+1-based `data-slidev-sandpack-step` and `data-slidev-sandpack-step-count`
+values. Native `disabled` and ARIA attributes remain the behavioral and
+accessibility source of truth.
+
+```css
+.slidev-sandpack__control-button {
+  border-radius: 999px;
+}
+
+.slidev-sandpack__control-button[data-slidev-sandpack-state="disabled"] {
+  opacity: 0.25;
+}
+```
+
+These hooks cover only addon-owned controls. Sandpack-owned editor and preview
+internals retain Sandpack's own styling contract.
 
 ## Compatibility
 

@@ -2,6 +2,21 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.4.0 - 2026-07-16
+
+### Added
+
+- Expose stable data attributes and empty CSS class hooks on addon-owned live
+  code controls, backed by zero-specificity default styles.
+- Navigate demo steps from focused controls with Command+Left/Right on macOS or
+  Control+Left/Right elsewhere.
+
+### Changed
+
+- Default Sandpack's interface to its dark theme when a deck does not configure
+  `theme`; explicit `"auto"`, `"light"`, `"dark"`, and custom themes are
+  unchanged.
+
 ## 0.3.0 - 2026-07-16
 
 ### Added

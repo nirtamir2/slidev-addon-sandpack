@@ -76,6 +76,18 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
   const toggleEditing = (): void => {
     setIsEditing((current) => !current);
   };
+  const handleControlKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (
+      event.altKey ||
+      event.shiftKey ||
+      event.metaKey === event.ctrlKey ||
+      (event.key !== "ArrowLeft" && event.key !== "ArrowRight")
+    )
+      return;
+    event.preventDefault();
+    if (event.key === "ArrowLeft") goBack();
+    else goNext();
+  };
 
   return (
     <section
@@ -88,21 +100,46 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
       <div
         aria-label="Live code controls"
         className="slidev-sandpack__controls"
+        data-slidev-sandpack-part="controls"
+        data-slidev-sandpack-state={isEditing ? "editing" : "read-only"}
         role="group"
+        onKeyDown={handleControlKeyDown}
       >
         <button
+          aria-keyshortcuts="Meta+ArrowLeft Control+ArrowLeft"
           aria-label="Previous step"
+          className="slidev-sandpack__control-button slidev-sandpack__control-button--previous"
+          data-slidev-sandpack-action="previous-step"
+          data-slidev-sandpack-part="control-button"
+          data-slidev-sandpack-state={
+            currentStepIndex === 0 ? "disabled" : "enabled"
+          }
           disabled={currentStepIndex === 0}
           type="button"
           onClick={goBack}
         >
           Previous
         </button>
-        <span aria-atomic="true" aria-live="polite" role="status">
+        <span
+          aria-atomic="true"
+          aria-live="polite"
+          className="slidev-sandpack__step-status"
+          data-slidev-sandpack-part="step-status"
+          data-slidev-sandpack-step={currentStepIndex + 1}
+          data-slidev-sandpack-step-count={demo.steps.length}
+          role="status"
+        >
           Step {currentStepIndex + 1} of {demo.steps.length}
         </span>
         <button
+          aria-keyshortcuts="Meta+ArrowRight Control+ArrowRight"
           aria-label="Next step"
+          className="slidev-sandpack__control-button slidev-sandpack__control-button--next"
+          data-slidev-sandpack-action="next-step"
+          data-slidev-sandpack-part="control-button"
+          data-slidev-sandpack-state={
+            currentStepIndex === lastStepIndex ? "disabled" : "enabled"
+          }
           disabled={currentStepIndex === lastStepIndex}
           type="button"
           onClick={goNext}
@@ -112,6 +149,10 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
         <button
           aria-label={isEditing ? "Use read-only mode" : "Enable editing"}
           aria-pressed={isEditing}
+          className="slidev-sandpack__control-button slidev-sandpack__control-button--mode"
+          data-slidev-sandpack-action="toggle-edit"
+          data-slidev-sandpack-part="control-button"
+          data-slidev-sandpack-state={isEditing ? "editing" : "read-only"}
           type="button"
           onClick={toggleEditing}
         >
@@ -129,7 +170,7 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
           visibleFiles,
         }}
         template={demo.template}
-        theme={demo.theme ?? "auto"}
+        theme={demo.theme ?? "dark"}
       >
         <SandpackLayout className="slidev-sandpack__workspace">
           <SandpackCodeEditor

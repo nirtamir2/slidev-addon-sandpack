@@ -1,7 +1,7 @@
 {
   "name": "slidev-addon-sandpack",
   "type": "module",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Build stepped, multi-file Sandpack live-code demos in Slidev from readable Markdown.",
   "author": "Nir Tamir",
   "license": "MIT",

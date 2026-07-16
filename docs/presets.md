@@ -24,7 +24,8 @@ The optional top-level `theme` field applies to every Sandpack demo in the
 deck. It mirrors Sandpack's native
 [`theme` prop](https://sandpack.codesandbox.io/docs/getting-started/themes) and
 accepts `"auto"`, `"light"`, `"dark"`, or a partial custom theme object. The
-default is `"auto"`.
+default is `"dark"`; use `"auto"` explicitly to follow the environment's color
+scheme.
 
 ```ts
 import { defineSandpackConfig } from "slidev-addon-sandpack";
@@ -62,7 +63,8 @@ export default defineSandpackConfig({
 Catalog names such as `"amethyst"` are not string options. The catalog exports
 theme objects compatible with the native prop. The deck theme styles
 Sandpack's interface; it does not style the application inside the preview
-iframe or the addon's step and edit controls.
+iframe or the addon's step and edit controls. The addon controls have their own
+[stable CSS and data hooks](../README.md#customize-addon-controls).
 
 ## Selection order
 

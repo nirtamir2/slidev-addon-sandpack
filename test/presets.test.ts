@@ -132,14 +132,14 @@ describe("resolveSandpackDemo", () => {
     expect(demo.theme).toEqual(theme);
   });
 
-  it("defaults the resolved theme to auto", async () => {
+  it("defaults the resolved theme to dark", async () => {
     const { demo } = await resolveSandpackDemo(
       parseDemo("react-ts"),
       {},
       { configFile },
     );
 
-    expect(demo.theme).toBe("auto");
+    expect(demo.theme).toBe("dark");
   });
 
   it.each([
