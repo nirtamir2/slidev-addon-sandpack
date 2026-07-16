@@ -69,17 +69,17 @@ without making the catalog package a dependency of this addon.
 
 **Acceptance criteria:**
 
-- [ ] README and preset guide show a deck-level `theme` configuration.
-- [ ] Documentation distinguishes imported catalog objects from supported
+- [x] README and preset guide show a deck-level `theme` configuration.
+- [x] Documentation distinguishes imported catalog objects from supported
       built-in string values and mentions the catalog installation requirement.
-- [ ] The example config exercises a theme value, and the changelog records the
+- [x] The example config exercises a theme value, and the changelog records the
       additive feature.
 
 **Verification:**
 
-- [ ] Run Prettier on the changed Markdown and example TypeScript files.
-- [ ] Run `pnpm run typecheck` so the public consumer example compiles.
-- [ ] Inspect all theme examples against the official Sandpack contract.
+- [x] Run Prettier on the changed Markdown and example TypeScript files.
+- [x] Run `pnpm run build:example` so the public consumer example compiles.
+- [x] Inspect all theme examples against the official Sandpack contract.
 
 **Dependencies:** Tasks 1 and 2.
 

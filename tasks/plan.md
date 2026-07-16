@@ -45,7 +45,7 @@ resolution, validation, and renderer behavior before documentation is updated.
 
 ### Phase 3: Consumer guidance
 
-- [ ] Task 3: Document built-in, inline custom, and optional catalog themes in
+- [x] Task 3: Document built-in, inline custom, and optional catalog themes in
       the README, preset guide, example configuration, and changelog.
 
 ### Phase 4: Repository verification

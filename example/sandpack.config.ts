@@ -3,6 +3,7 @@ import { defineSandpackConfig } from "slidev-addon-sandpack";
 
 export default defineSandpackConfig({
   defaultPreset: "react-ts",
+  theme: "dark",
   presets: {
     starter: {
       template: "react-ts",
