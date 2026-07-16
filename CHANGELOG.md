@@ -2,6 +2,25 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.5.0 - 2026-07-16
+
+### Added
+
+- Expose stable class and data hooks for the addon-owned SVG control icons.
+
+### Changed
+
+- Replace text control labels with compact previous, next, lock, and pencil
+  icons while preserving accessible action names and native tooltips.
+- Keep square control sizing and horizontal padding intact under Slidev's
+  global button styles while retaining easy consumer overrides.
+
+### Removed
+
+- Remove modifier-arrow step shortcuts that conflicted with editor and Slidev
+  keyboard handling. Focused buttons continue to support native Enter and Space
+  activation.
+
 ## 0.4.0 - 2026-07-16
 
 ### Added

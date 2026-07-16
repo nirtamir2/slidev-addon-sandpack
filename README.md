@@ -149,10 +149,10 @@ Maintainers can follow [docs/releasing.md](./docs/releasing.md) for the npm trus
 
 Every demo provides:
 
-- Previous/next step controls with boundary states and a live step announcement.
-- Read-only and editable modes.
-- Command+Left/Right step shortcuts on macOS and Control+Left/Right elsewhere
-  while focus is within the addon controls.
+- Icon-only previous/next step controls with boundary states, accessible labels,
+  native tooltips, and a live step announcement.
+- Read-only and editable modes through an action icon: the pencil enables
+  editing, and the lock enables read-only mode.
 - Sandpack file tabs, editor diagnostics, and preview refresh controls.
 - Keyboard isolation so editor input does not trigger Slidev navigation.
 - A contained error state if the embedded renderer fails.
@@ -160,9 +160,10 @@ Every demo provides:
 ### Customize addon controls
 
 The addon-owned control bar exposes semantic data attributes and empty CSS
-classes. Bundled control styles use zero-specificity `:where(...)` selectors,
-so a normal consumer class selector overrides them without `!important` or
-specificity escalation.
+classes. Bundled control styles use low-specificity data selectors. Button and
+SVG defaults include only element specificity so they survive Slidev resets,
+while a normal consumer class selector still overrides them without
+`!important`.
 
 | Element         | CSS hook                                     | Data contract                                                          |
 | --------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
@@ -171,13 +172,17 @@ specificity escalation.
 | Previous button | `.slidev-sandpack__control-button--previous` | action `previous-step`, state `enabled` or `disabled`                  |
 | Next button     | `.slidev-sandpack__control-button--next`     | action `next-step`, state `enabled` or `disabled`                      |
 | Mode button     | `.slidev-sandpack__control-button--mode`     | action `toggle-edit`, state `read-only` or `editing`                   |
+| Control icon    | `.slidev-sandpack__control-icon`             | part `control-icon`, icon name                                         |
 | Step status     | `.slidev-sandpack__step-status`              | part `step-status`, current step, and step count                       |
 
 Every action and state value is available through
 `data-slidev-sandpack-action` and `data-slidev-sandpack-state`. The status uses
 1-based `data-slidev-sandpack-step` and `data-slidev-sandpack-step-count`
-values. Native `disabled` and ARIA attributes remain the behavioral and
-accessibility source of truth.
+values. Icons expose `data-slidev-sandpack-icon` as `arrow-left`,
+`arrow-right`, `pencil`, or `lock`. Buttons contain no visible text, while
+native `aria-label` and `title` attributes preserve their action names.
+Native `disabled` and ARIA attributes remain the behavioral and accessibility
+source of truth.
 
 ```css
 .slidev-sandpack__control-button {

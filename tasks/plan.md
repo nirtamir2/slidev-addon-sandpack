@@ -1,264 +1,205 @@
-# Implementation Plan: Sandpack 0.4.0 controls and dark default
+# Implementation Plan: Icon-only Sandpack controls
 
 ## Overview
 
-Ship `slidev-addon-sandpack@0.4.0` with a dark omitted-theme default, stable
-addon-owned control hooks, and scoped modifier-arrow step navigation. Verify
-the packed package with React 18 and React 19, publish through the existing
-trusted GitHub release workflow, then upgrade the real talks deck and capture
-browser evidence.
+Replace every visible header-button label with a self-contained inline SVG,
+remove the unsuccessful modifier-arrow shortcuts, and make the compact square
+button styling survive Slidev's generic button reset. Preserve accessible
+names, mode behavior, public class/data hooks, and the visible step status.
 
 ## Architecture decisions
 
-- Resolve an omitted theme to `"dark"` in both the preset resolver and renderer
-  fallback; explicit themes remain pass-through values.
-- Treat data attributes as the semantic control contract and BEM classes as
-  empty consumer hooks.
-- Target bundled control styles only through `:where([data-*])` selectors so
-  the addon's defaults have zero specificity.
-- Handle Meta/Control + Left/Right only on the control group. Keep the existing
-  Sandpack-root propagation boundary for Slidev isolation.
-- Release the additive public API as minor version 0.4.0 and consume the
-  published artifact from `../talks`.
+- Keep icon components private to the renderer and use `currentColor`; do not
+  add an icon dependency or public icon API.
+- Treat icons as decorative. Native buttons retain action-oriented
+  `aria-label` and matching `title` values.
+- Show action icons on the mode button: lock while editing and pencil while
+  read-only.
+- Remove shortcut handling and `aria-keyshortcuts` without replacing them.
+  Keep the existing Sandpack-root propagation boundary that isolates editor
+  input from Slidev.
+- Raise only the bundled button selectors to element-level specificity. The
+  public consumer class remains more specific and can override defaults.
 
 ## Dependency graph
 
 ```text
-Theme and control contract tests
+Renderer and stylesheet contract tests
         |
         v
-Renderer, resolver, and stylesheet implementation
+Icon-only renderer and shortcut removal
         |
         v
-Public documentation and 0.4.0 metadata
+Square button and icon styling
         |
         v
-Repository review and package verification
+Runtime documentation
         |
         v
-PR merge -> v0.4.0 release -> npm verification
-        |
-        v
-Talks dependency upgrade -> browser verification -> screenshot -> merge
+Full package checks and real-browser verification
 ```
 
-## Task 1: Prove the new theme default
+## Task 1: Encode the icon-control contract
 
-**Description:** Change only the resolver and renderer expectations first,
-confirm both tests fail against 0.3.0, then make the two smallest production
-changes.
+**Description:** Update focused renderer and stylesheet tests first so the new
+visual, accessibility, keyboard-removal, and override requirements fail against
+the current implementation.
 
 **Acceptance criteria:**
 
-- [ ] An omitted theme resolves and renders as `"dark"`.
-- [ ] Explicit `"auto"`, `"light"`, `"dark"`, and custom objects remain unchanged.
-- [ ] Focused resolver and renderer tests pass after implementation.
+- [ ] Tests require icon-only button contents with preserved accessible names.
+- [ ] Tests require action-based mode icon changes and retained state hooks.
+- [ ] Tests prove modifier-arrow events no longer navigate or advertise shortcuts.
 
 **Verification:**
 
-- [ ] RED and GREEN runs are recorded with focused Vitest commands.
-- [ ] `pnpm exec vitest run test/presets.test.ts test/renderer.test.tsx` passes.
+- [ ] Focused Vitest run fails for the expected old text/shortcut behavior.
+- [ ] Test diff contains no production implementation.
 
 **Dependencies:** None
 
 **Files likely touched:**
 
-- `test/presets.test.ts`
 - `test/renderer.test.tsx`
-- `src/presets.ts`
-- `src/renderer.tsx`
+- `test/styles.test.ts`
 
-**Estimated scope:** Medium
+**Estimated scope:** Small
 
-## Task 2: Add the control customization contract
+## Task 2: Render icons and remove shortcuts
 
-**Description:** Add failing DOM and stylesheet contract tests, then expose the
-documented class hooks and semantic data attributes while moving bundled
-control styles to zero-specificity data selectors.
+**Description:** Add four small private inline SVG components, render them in
+the existing buttons, preserve action/state semantics, and delete the scoped
+modifier-arrow implementation.
 
 **Acceptance criteria:**
 
-- [ ] Every control element exposes its documented class and data hooks.
-- [ ] Dynamic state and 1-based step metadata update after interaction.
-- [ ] Bundled control CSS does not target the empty class hooks.
+- [ ] Previous and next render left/right arrows with no visible text.
+- [ ] Mode renders lock while editing and pencil while read-only.
+- [ ] SVGs are decorative while buttons retain labels, tooltips, and behavior.
+- [ ] Shortcut handler and `aria-keyshortcuts` are absent.
 
 **Verification:**
 
-- [ ] New renderer and stylesheet assertions fail before implementation.
-- [ ] `pnpm exec vitest run test/renderer.test.tsx test/styles.test.ts` passes.
-- [ ] `git diff --check` passes.
+- [ ] `pnpm exec vitest run test/renderer.test.tsx` passes on Node 24.
+- [ ] `pnpm run typecheck` passes on Node 24.
 
 **Dependencies:** Task 1
 
 **Files likely touched:**
 
-- `test/renderer.test.tsx`
-- `test/styles.test.ts`
 - `src/renderer.tsx`
-- `styles/sandpack.css`
+- `test/renderer.test.tsx`
 
 **Estimated scope:** Medium
 
-## Checkpoint: Theme and styling contract
+## Checkpoint: Behavior and accessibility
 
 - [ ] Tasks 1 and 2 are committed as tested increments.
-- [ ] Focused tests and type checking pass.
-- [ ] The public hooks exactly match the approved design.
+- [ ] Buttons work through click, Enter, and Space.
+- [ ] Public classes, data states, disabled states, and edit-mode behavior remain intact.
 
-## Task 3: Add scoped keyboard navigation
+## Task 3: Make icon-button styles reliable
 
-**Description:** Add failing tests for supported shortcuts, boundary behavior,
-unsupported modifier combinations, and events outside the controls. Implement
-the smallest control-group handler and accessible shortcut metadata.
+**Description:** Convert the addon buttons to compact squares, size and center
+their SVGs, and use low but sufficient selector specificity to beat Slidev's
+generic button reset without weakening consumer overrides.
 
 **Acceptance criteria:**
 
-- [ ] Meta/Control + Left/Right changes steps from a focused control.
-- [ ] Shift/Alt combinations, unmodified arrows, and events outside the group do not navigate.
-- [ ] Recognized shortcuts prevent their browser default and remain isolated from Slidev.
+- [ ] Buttons have explicit square dimensions, centered icons, and compact padding.
+- [ ] SVGs inherit color and cannot intercept pointer events.
+- [ ] Bundled selectors do not target the public consumer classes.
+- [ ] A normal consumer class selector can still override every default.
 
 **Verification:**
 
-- [ ] Keyboard tests fail before implementation and pass afterward.
-- [ ] `pnpm exec vitest run test/renderer.test.tsx` passes.
-- [ ] `pnpm run typecheck` passes.
+- [ ] `pnpm exec vitest run test/styles.test.ts` passes.
+- [ ] `git diff --check` passes.
 
 **Dependencies:** Task 2
 
 **Files likely touched:**
 
-- `test/renderer.test.tsx`
-- `src/renderer.tsx`
+- `styles/sandpack.css`
+- `test/styles.test.ts`
 
 **Estimated scope:** Small
 
-## Task 4: Document and prepare 0.4.0
+## Task 4: Update the public control documentation
 
-**Description:** Update consumer documentation, changelog, and package metadata
-to describe the dark default, explicit adaptive opt-in, styling contract, and
-keyboard behavior.
+**Description:** Remove the shortcut claim and describe the icon-only controls,
+action-based mode glyphs, preserved labels, and styling hooks without rewriting
+historical release notes.
 
 **Acceptance criteria:**
 
-- [ ] README and preset documentation match runtime behavior.
-- [ ] The changelog explains user impact under 0.4.0.
-- [ ] Package metadata reports 0.4.0 and retains Node >=24.
+- [ ] README no longer advertises a code-step shortcut.
+- [ ] README explains the arrow and mode icons and their accessible names.
+- [ ] No current-behavior documentation contradicts the renderer.
 
 **Verification:**
 
-- [ ] `rg` finds no stale statement that `"auto"` is the default.
-- [ ] `pnpm run format:check` passes.
+- [ ] `rg` finds no current shortcut claim outside historical release material.
+- [ ] `pnpm run format:check` passes on Node 24.
 
 **Dependencies:** Task 3
 
 **Files likely touched:**
 
 - `README.md`
-- `docs/presets.md`
-- `CHANGELOG.md`
-- `package.json`
-- `pnpm-lock.yaml`
 
-**Estimated scope:** Medium
+**Estimated scope:** Small
 
 ## Checkpoint: Release candidate
 
-- [ ] All implementation increments are committed.
-- [ ] `pnpm run check` passes on Node 24.
-- [ ] `pnpm run test:pack` passes with the default React 19 consumer.
-- [ ] `REACT_VERSION=18.3.1 pnpm run test:pack` passes.
-- [ ] `pnpm run audit:prod` passes.
+- [ ] Icon markup, behavior, styles, and docs form one consistent contract.
+- [ ] Focused renderer and stylesheet suites pass.
+- [ ] No unrelated files are changed.
 
-## Task 5: Review, merge, and publish the addon
+## Task 5: Verify the package and live Slidev UI
 
-**Description:** Review the complete branch, open a ready PR, wait for every
-required check, merge to main, tag the exact merge commit, publish the GitHub
-release, and verify npm trusted publication and provenance.
+**Description:** Run the complete Node 24 quality gates, packed-consumer checks,
+and production audit, then inspect a real Slidev Sandpack demo at desktop size
+and capture screenshot evidence.
 
 **Acceptance criteria:**
 
-- [ ] No actionable review findings remain and CI is green.
-- [ ] The PR is merged and `v0.4.0` tags the exact main merge commit.
-- [ ] npm reports 0.4.0 as `latest` with provenance.
+- [ ] The full repository check, React 18/19 packed consumers, and production audit pass.
+- [ ] Browser inspection shows icon-only buttons, working mode/step actions, and dark rendering.
+- [ ] Computed button dimensions/padding are non-zero and Slidev does not override them.
+- [ ] Browser console has no new addon errors.
 
 **Verification:**
 
-- [ ] GitHub PR checks and release workflow succeed.
-- [ ] `npm view slidev-addon-sandpack@0.4.0 version dist-tags --json` reports the release.
-- [ ] npm package metadata contains a provenance attestation.
+- [ ] `pnpm run check` passes on Node 24.
+- [ ] `pnpm run test:pack` passes on Node 24.
+- [ ] `REACT_VERSION=18.3.1 pnpm run test:pack` passes on Node 24.
+- [ ] `pnpm run audit:prod` passes on Node 24.
+- [ ] A real-browser screenshot and DOM/computed-style evidence are retained.
 
 **Dependencies:** Task 4 and release-candidate checkpoint
 
-**Files likely touched:** None beyond release metadata already committed
-
-**Estimated scope:** Small
-
-## Task 6: Upgrade and build the talks deck
-
-**Description:** Upgrade only the 2025-12-15 talk to the published 0.4.0
-package, refresh the workspace lockfile, and prove the production deck still
-builds before starting browser verification.
-
-**Acceptance criteria:**
-
-- [ ] The talk consumes `slidev-addon-sandpack@^0.4.0` without an explicit theme.
-- [ ] The lockfile resolves the published 0.4.0 artifact.
-- [ ] The relevant talk builds successfully on Node 24.
-
-**Verification:**
-
-- [ ] The relevant talks build command succeeds on Node 24.
-- [ ] The dependency and lockfile diff contains no unrelated workspace updates.
-
-**Dependencies:** Task 5
-
-**Files likely touched:**
-
-- `../talks/2025-12-15/src/package.json`
-- `../talks/pnpm-lock.yaml`
-
-**Estimated scope:** Small
-
-## Task 7: Browser-verify and merge the talks deck
-
-**Description:** Exercise the first Sandpack demo from the upgraded talk in a
-real browser, capture visual evidence, then review, commit, push, and merge the
-talks change.
-
-**Acceptance criteria:**
-
-- [ ] The first demo visibly uses the dark shell, renders its preview, and exposes the control hooks.
-- [ ] Modifier-arrow navigation changes steps and the console has no new addon errors.
-- [ ] A screenshot is retained as evidence and the talks change is merged.
-
-**Verification:**
-
-- [ ] DOM inspection confirms theme/control state and keyboard behavior.
-- [ ] A real-browser screenshot shows the verified slide.
-- [ ] Talks CI, if configured for the PR, succeeds before merge.
-
-**Dependencies:** Task 6
-
-**Files likely touched:** None beyond the Task 6 dependency update
+**Files likely touched:** None beyond verification artifacts outside the repository
 
 **Estimated scope:** Small
 
 ## Checkpoint: Complete
 
-- [ ] All design success criteria are satisfied.
-- [ ] Both repositories are clean and synchronized with their merged main branches.
-- [ ] Release, npm provenance, browser evidence, and commit/PR URLs are reported.
+- [ ] All approved design requirements are satisfied.
+- [ ] All automated and browser checks pass.
+- [ ] Branch is clean, reviewable, and ready for a PR or release decision.
 
 ## Risks and mitigations
 
-| Risk                                               | Impact | Mitigation                                                                     |
-| -------------------------------------------------- | ------ | ------------------------------------------------------------------------------ |
-| Control CSS accidentally retains class specificity | Medium | Contract-test the stylesheet and inspect computed styles in the real deck.     |
-| Shortcut collides with Slidev or editing           | High   | Attach only to the control group and test both propagation and outside events. |
-| Package works in the repo but not for consumers    | High   | Build isolated packed consumers with both supported React majors.              |
-| npm publication races the talks update             | Medium | Verify the exact published version before changing the talks lockfile.         |
-| Real deck exposes layout/runtime regressions       | High   | Build and inspect the actual Sandpack slide before merging talks.              |
+| Risk                                           | Impact | Mitigation                                                                                        |
+| ---------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| Icon-only controls lose accessible meaning     | High   | Keep native action labels/tooltips and test them by role.                                         |
+| Mode icon communicates state instead of action | Medium | Test lock in editing and pencil in read-only explicitly.                                          |
+| Slidev still removes button padding            | High   | Raise default selectors only to element specificity and inspect computed styles in the real deck. |
+| Consumer overrides become harder               | High   | Keep public classes out of bundled selectors and assert class specificity remains higher.         |
+| Shortcut behavior remains in docs or DOM       | Medium | Search docs and assert `aria-keyshortcuts`/navigation are absent.                                 |
 
 ## Open questions
 
-None. The approved design resolves the public contract and release scope.
+None. The approved design resolves icon semantics, keyboard behavior, visible
+text, accessibility, styling, and scope.
