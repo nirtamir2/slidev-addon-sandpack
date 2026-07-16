@@ -7,6 +7,8 @@
 
 Build stepped, multi-file [CodeSandbox Sandpack](https://sandpack.codesandbox.io/) live-code demos in [Slidev](https://sli.dev/) from readable Markdown.
 
+![Slidev Sandpack demo showing step navigation and live code updates to a React Three Fiber preview](./docs/assets/demo.gif)
+
 ## Install
 
 ```bash
