@@ -6,5 +6,5 @@
 - [x] Task 3: Add reliable compact square button and icon styling.
 - [x] Task 4: Update current runtime-control documentation.
 - [x] Checkpoint: Confirm the complete icon-control contract is consistent.
-- [ ] Task 5: Run Node 24 package checks and real-browser verification.
-- [ ] Checkpoint: Confirm the branch is clean and ready for review.
+- [x] Task 5: Run Node 24 package checks and real-browser verification.
+- [x] Checkpoint: Confirm the branch is clean and ready for review.
