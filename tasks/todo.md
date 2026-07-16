@@ -1,116 +1,113 @@
-# pkg.pr.new preview checklist
+# Sandpack theme configuration checklist
 
-## Task 1: Lock the publishing CLI
+## Task 1: Define and resolve the native theme contract
 
-**Description:** Add the current `pkg-pr-new` CLI as a development dependency
-and commit the pnpm resolution used by CI.
+**Description:** Use a red-green cycle to establish the public theme type and
+resolver behavior. Add failing type and resolver assertions first, confirm they
+fail for the missing feature, then implement the smallest type, validation, and
+resolved-data changes that make them pass.
 
 **Acceptance criteria:**
 
-- [x] `package.json` contains `pkg-pr-new` in `devDependencies`.
-- [x] `pnpm-lock.yaml` resolves the declared CLI version.
-- [x] `pnpm install --frozen-lockfile` succeeds.
+- [ ] `SandpackConfig.theme` accepts `"auto"`, `"light"`, `"dark"`, and partial
+      custom theme objects while rejecting unsupported strings.
+- [ ] `SandpackThemeProp` is exported from the addon package root, and
+      `SandpackDemo.theme` remains optional.
+- [ ] Resolution retains a configured theme, defaults omission to `"auto"`, and
+      rejects invalid top-level values with the specified addon-prefixed error.
 
 **Verification:**
 
-- [x] Run `pnpm install --frozen-lockfile`.
-- [x] Run `pnpm exec pkg-pr-new --help` outside CI only if the CLI supports a
-      local help command without publishing.
+- [ ] Observe the new focused assertions fail before production code changes.
+- [ ] Run `pnpm exec vitest run test/presets.test.ts`.
+- [ ] Run `pnpm run typecheck`.
 
 **Dependencies:** None.
 
-**Files likely touched:** `package.json`, `pnpm-lock.yaml`.
+**Files likely touched:** `src/types.ts`, `src/index.ts`, `src/presets.ts`,
+`test/types.test.ts`, `test/presets.test.ts`.
 
-**Estimated scope:** Small.
+**Estimated scope:** Medium.
 
-## Task 2: Publish a gated PR preview
+## Task 2: Pass the resolved theme to Sandpack
 
-**Description:** Extend CI with one pull-request-only preview job that waits for
-all existing checks, rebuilds the package, and publishes through pkg.pr.new.
+**Description:** Add renderer assertions before replacing the hard-coded theme.
+Prove that a custom object reaches `SandpackProvider` unchanged and that a demo
+without the optional field still receives `"auto"`.
 
 **Acceptance criteria:**
 
-- [x] The job runs only for `pull_request` events.
-- [x] The job depends on both `validate` and `package`.
-- [x] The job has no `GITHUB_TOKEN` permissions.
-- [x] The locked CLI publishes exactly once with pnpm dev-install comment
-      formatting.
+- [ ] The renderer passes `demo.theme` to `SandpackProvider` without reshaping
+      custom objects.
+- [ ] Missing `demo.theme` values continue to pass `"auto"`.
+- [ ] Existing renderer controls, step navigation, and error behavior remain
+      unchanged.
 
 **Verification:**
 
-- [x] Run Prettier against `.github/workflows/ci.yml`.
-- [x] Inspect the parsed YAML structure and workflow diff.
-- [x] Confirm `.github/workflows/release.yml` is unchanged.
+- [ ] Observe the provider-theme assertion fail against the hard-coded value.
+- [ ] Run `pnpm exec vitest run test/renderer.test.tsx`.
+- [ ] Run `pnpm run typecheck` after the green implementation.
 
 **Dependencies:** Task 1.
 
-**Files likely touched:** `.github/workflows/ci.yml`.
+**Files likely touched:** `src/renderer.tsx`, `test/renderer.test.tsx`.
 
 **Estimated scope:** Small.
 
-## Task 3: Document preview packages
+## Checkpoint: Verify the runtime path
 
-**Description:** Make preview availability discoverable to users and explain the
-contributor and maintainer setup.
+- [ ] Run the focused resolver and renderer tests together.
+- [ ] Confirm the public package build emits the new theme types.
+- [ ] Inspect the source diff for unrelated preset or control changes.
 
-**Acceptance criteria:**
+## Task 3: Document deck-level theme configuration
 
-- [x] README displays the official repository badge.
-- [x] Contributing guidance describes the updated PR comment and preview use.
-- [x] One-time GitHub App activation is documented.
-
-**Verification:**
-
-- [x] Run Prettier against both Markdown files.
-- [x] Check all pkg.pr.new links and repository identifiers.
-
-**Dependencies:** Task 2.
-
-**Files likely touched:** `README.md`, `CONTRIBUTING.md`.
-
-**Estimated scope:** Small.
-
-## Task 4: Verify locally
-
-**Description:** Exercise the repository's full quality gate and isolated packed
-consumer after all implementation changes.
+**Description:** Explain the new setting using examples that match Sandpack's
+official API. Cover built-in modes, partial custom objects, and catalog themes
+without making the catalog package a dependency of this addon.
 
 **Acceptance criteria:**
 
-- [x] Formatting, linting, type checking, unit tests, and example build pass.
-- [x] Isolated package-consumer test passes.
-- [x] Diff is clean, scoped, and credential-free.
+- [ ] README and preset guide show a deck-level `theme` configuration.
+- [ ] Documentation distinguishes imported catalog objects from supported
+      built-in string values and mentions the catalog installation requirement.
+- [ ] The example config exercises a theme value, and the changelog records the
+      additive feature.
 
 **Verification:**
 
-- [x] Run `pnpm run check`.
-- [x] Run `pnpm run test:pack`.
-- [x] Run `git diff --check` and inspect `git diff`.
+- [ ] Run Prettier on the changed Markdown and example TypeScript files.
+- [ ] Run `pnpm run typecheck` so the public consumer example compiles.
+- [ ] Inspect all theme examples against the official Sandpack contract.
+
+**Dependencies:** Tasks 1 and 2.
+
+**Files likely touched:** `README.md`, `docs/presets.md`,
+`example/sandpack.config.ts`, `CHANGELOG.md`.
+
+**Estimated scope:** Medium.
+
+## Task 4: Run final verification
+
+**Description:** Exercise the repository-wide definition of done and inspect the
+complete change before handoff.
+
+**Acceptance criteria:**
+
+- [ ] Formatting, linting, type checking, unit tests, and example build pass.
+- [ ] The isolated packed-package consumer test passes.
+- [ ] The final diff is scoped, whitespace-clean, and credential-free.
+
+**Verification:**
+
+- [ ] Run `pnpm run check`.
+- [ ] Run `pnpm run test:pack`.
+- [ ] Run `git diff --check` and inspect `git diff --stat` plus the full diff.
 
 **Dependencies:** Tasks 1-3.
 
-**Files likely touched:** None beyond intentional implementation files.
-
-**Estimated scope:** Small.
-
-## Task 5: Verify the live PR integration
-
-**Description:** Activate the repository GitHub App integration and prove the
-workflow produces an installable PR package.
-
-**Acceptance criteria:**
-
-- [x] The official pkg.pr.new GitHub App is installed for this repository.
-- [x] The preview job succeeds on the implementation PR.
-- [x] One app comment contains a working pnpm development install command.
-
-**Verification:**
-
-- [x] Inspect the GitHub Actions run and PR comment.
-- [x] Confirm the preview URL resolves and reflects the PR revision.
-
-**Dependencies:** Task 4 and a pushed pull request.
-
-**Files likely touched:** None.
+**Files likely touched:** None beyond intentional implementation and checklist
+updates.
 
 **Estimated scope:** Small.
