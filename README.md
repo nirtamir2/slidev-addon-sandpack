@@ -157,7 +157,7 @@ Every demo provides:
 
 ## Compatibility
 
-- Node.js `>=20.19.0`
+- Node.js `>=24.0.0`
 - Slidev `>=52.1.0`
 - React and React DOM `>=18 <20`
 - Vue `>=3.4.0`
