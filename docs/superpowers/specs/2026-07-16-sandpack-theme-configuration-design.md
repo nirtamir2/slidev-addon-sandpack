@@ -68,8 +68,9 @@ export default defineSandpackConfig({
 });
 ```
 
-Sandpack fills fields omitted from a partial custom object using its light
-theme defaults, matching the upstream theme-prop behavior.
+Sandpack uses `colors.surface1` to choose defaults for fields omitted from a
+partial custom object: dark defaults when that color is detected as dark, and
+light defaults otherwise.
 
 `SandpackConfig.theme` will be typed as `SandpackThemeProp`, and the addon will
 re-export that type from its package root so consumers do not need to import a

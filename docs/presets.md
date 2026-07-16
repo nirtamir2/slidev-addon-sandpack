@@ -41,9 +41,10 @@ export default defineSandpackConfig({
 });
 ```
 
-Sandpack fills omitted fields in a partial custom object from its light theme.
-To use a catalog theme, install the optional package in the consuming deck and
-pass its exported object:
+Sandpack uses `colors.surface1` to choose defaults for omitted fields: dark
+defaults when that color is detected as dark, and light defaults otherwise. To
+use a catalog theme, install the optional package in the consuming deck and pass
+its exported object:
 
 ```bash
 pnpm add @codesandbox/sandpack-themes
