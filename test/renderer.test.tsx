@@ -173,10 +173,7 @@ describe("sandpack demo renderer", () => {
 
     expect(controls).toHaveClass("slidev-sandpack__controls");
     expect(controls).toHaveAttribute("data-slidev-sandpack-part", "controls");
-    expect(controls).toHaveAttribute(
-      "data-slidev-sandpack-state",
-      "read-only",
-    );
+    expect(controls).toHaveAttribute("data-slidev-sandpack-state", "read-only");
     expect(previous).toHaveClass(
       "slidev-sandpack__control-button",
       "slidev-sandpack__control-button--previous",
@@ -203,10 +200,7 @@ describe("sandpack demo renderer", () => {
     expect(mode).toHaveAttribute("data-slidev-sandpack-action", "toggle-edit");
     expect(mode).toHaveAttribute("data-slidev-sandpack-state", "read-only");
     expect(status).toHaveClass("slidev-sandpack__step-status");
-    expect(status).toHaveAttribute(
-      "data-slidev-sandpack-part",
-      "step-status",
-    );
+    expect(status).toHaveAttribute("data-slidev-sandpack-part", "step-status");
     expect(status).toHaveAttribute("data-slidev-sandpack-step", "1");
     expect(status).toHaveAttribute("data-slidev-sandpack-step-count", "2");
 
@@ -216,10 +210,7 @@ describe("sandpack demo renderer", () => {
     expect(status).toHaveAttribute("data-slidev-sandpack-step", "2");
 
     await user.click(mode);
-    expect(controls).toHaveAttribute(
-      "data-slidev-sandpack-state",
-      "editing",
-    );
+    expect(controls).toHaveAttribute("data-slidev-sandpack-state", "editing");
     expect(mode).toHaveAttribute("data-slidev-sandpack-state", "editing");
   });
 

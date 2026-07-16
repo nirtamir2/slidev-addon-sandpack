@@ -8,9 +8,7 @@ describe("sandpack layout styles", () => {
       "utf8",
     );
 
-    expect(styles).toContain(
-      ':where([data-slidev-sandpack-part="controls"])',
-    );
+    expect(styles).toContain(':where([data-slidev-sandpack-part="controls"])');
     expect(styles).toContain(
       ':where([data-slidev-sandpack-part="control-button"])',
     );
