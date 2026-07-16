@@ -129,7 +129,7 @@ function SandpackDemoContent({ demo }: { demo: SandpackDemo }) {
           visibleFiles,
         }}
         template={demo.template}
-        theme="auto"
+        theme={demo.theme ?? "auto"}
       >
         <SandpackLayout className="slidev-sandpack__workspace">
           <SandpackCodeEditor

@@ -2,6 +2,17 @@
 
 All notable changes to `slidev-addon-sandpack` are documented here.
 
+## 0.3.0 - 2026-07-16
+
+### Added
+
+- Configure one deck-wide Sandpack theme with built-in modes, partial custom
+  objects, or optional `@codesandbox/sandpack-themes` catalog objects.
+
+### Changed
+
+- **Breaking:** Require Node.js 24 or newer for addon consumers and development.
+
 ## 0.2.1 - 2026-07-14
 
 ### Fixed

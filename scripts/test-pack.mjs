@@ -85,7 +85,7 @@ try {
       2,
     ),
   );
-  run("npm", ["install", "--no-audit", "--no-fund"], {
+  run("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], {
     cwd: temporaryDirectory,
   });
 

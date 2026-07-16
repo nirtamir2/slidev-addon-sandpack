@@ -11,11 +11,58 @@ import { defineSandpackConfig } from "slidev-addon-sandpack";
 
 export default defineSandpackConfig({
   defaultPreset: "react-ts",
+  theme: "dark",
   presets: {},
 });
 ```
 
 The addon loads the file without a persistent module cache. In development it also watches the config and every source-backed file.
+
+## Deck theme
+
+The optional top-level `theme` field applies to every Sandpack demo in the
+deck. It mirrors Sandpack's native
+[`theme` prop](https://sandpack.codesandbox.io/docs/getting-started/themes) and
+accepts `"auto"`, `"light"`, `"dark"`, or a partial custom theme object. The
+default is `"auto"`.
+
+```ts
+import { defineSandpackConfig } from "slidev-addon-sandpack";
+
+export default defineSandpackConfig({
+  theme: {
+    colors: {
+      accent: "rebeccapurple",
+    },
+    syntax: {
+      tag: "#006400",
+    },
+  },
+});
+```
+
+Sandpack uses `colors.surface1` to choose defaults for omitted fields: dark
+defaults when that color is detected as dark, and light defaults otherwise. To
+use a catalog theme, install the optional package in the consuming deck and pass
+its exported object:
+
+```bash
+pnpm add @codesandbox/sandpack-themes
+```
+
+```ts
+import { amethyst } from "@codesandbox/sandpack-themes";
+import { defineSandpackConfig } from "slidev-addon-sandpack";
+
+export default defineSandpackConfig({
+  theme: amethyst,
+});
+```
+
+Catalog names such as `"amethyst"` are not string options. The catalog exports
+theme objects compatible with the native prop. The deck theme styles
+Sandpack's interface; it does not style the application inside the preview
+iframe or the addon's step and edit controls.
 
 ## Selection order
 

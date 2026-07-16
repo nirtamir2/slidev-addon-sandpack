@@ -10,4 +10,5 @@ export {
   type SandpackPredefinedTemplate,
   type SandpackPreset,
   type SandpackPresetFile,
+  type SandpackThemeProp,
 } from "./types.js";

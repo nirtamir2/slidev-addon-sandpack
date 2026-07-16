@@ -86,6 +86,7 @@ import { defineSandpackConfig } from "slidev-addon-sandpack";
 
 export default defineSandpackConfig({
   defaultPreset: "r3f",
+  theme: "dark",
   presets: {
     r3f: {
       template: "react-ts",
@@ -120,6 +121,12 @@ export default defineSandpackConfig({
 });
 ```
 
+The top-level `theme` applies to every demo in the deck. It accepts Sandpack's
+`"auto"` (the default), `"light"`, or `"dark"` mode, as well as native custom
+theme objects. Catalog themes from `@codesandbox/sandpack-themes` can be
+installed separately and passed as objects. See the
+[preset guide](./docs/presets.md#deck-theme) for examples.
+
 Select a named preset after the opening delimiter:
 
 `````md
@@ -150,7 +157,7 @@ Every demo provides:
 
 ## Compatibility
 
-- Node.js `>=20.19.0`
+- Node.js `>=24.0.0`
 - Slidev `>=52.1.0`
 - React and React DOM `>=18 <20`
 - Vue `>=3.4.0`

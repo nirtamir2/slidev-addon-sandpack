@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { defineSandpackConfig } from "../src/index";
-import type { SandpackPresetFile } from "../src/index";
+import type { SandpackPresetFile, SandpackThemeProp } from "../src/index";
 
 describe("defineSandpackConfig", () => {
   it("preserves literal preset inference and returns the same object", () => {
@@ -37,6 +37,18 @@ describe("defineSandpackConfig", () => {
 
     expect(files).toHaveLength(4);
   });
+
+  it("models built-in and partial custom Sandpack themes", () => {
+    const customTheme = {
+      colors: { accent: "rebeccapurple" },
+      syntax: { tag: "#006400" },
+    } satisfies SandpackThemeProp;
+    const builtIn = defineSandpackConfig({ theme: "dark" });
+    const custom = defineSandpackConfig({ theme: customTheme });
+
+    expectTypeOf(builtIn.theme).toEqualTypeOf<"dark">();
+    expect(custom.theme).toBe(customTheme);
+  });
 });
 
 // @ts-expect-error A preset file must choose code or source, never both.
@@ -50,4 +62,9 @@ defineSandpackConfig({
       template: "not-a-sandpack-template",
     },
   },
+});
+
+defineSandpackConfig({
+  // @ts-expect-error Sandpack theme strings are a closed public union.
+  theme: "amethyst",
 });

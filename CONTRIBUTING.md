@@ -4,7 +4,7 @@ Thanks for contributing to `slidev-addon-sandpack`.
 
 ## Development setup
 
-This repository requires Node.js 20.19 or newer and uses the pnpm version declared
+This repository requires Node.js 24 or newer and uses the pnpm version declared
 in `package.json`.
 
 ```bash
