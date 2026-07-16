@@ -51,7 +51,7 @@ function isBuiltinTemplate(name: string): name is SandpackPredefinedTemplate {
 }
 
 function resolveTheme(value: unknown): SandpackThemeProp {
-  if (value === undefined) return "auto";
+  if (value === undefined) return "dark";
   if (value === "auto" || value === "light" || value === "dark") return value;
   if (isObject(value)) return value as SandpackThemeProp;
   throw presetError(

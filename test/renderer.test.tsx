@@ -138,7 +138,7 @@ describe("sandpack demo renderer", () => {
     expect(provider).toHaveAttribute("data-template", "react-ts");
     expect(
       JSON.parse(provider.attributes.getNamedItem("data-theme")?.value ?? ""),
-    ).toBe("auto");
+    ).toBe("dark");
     expect(screen.getByTestId("editor")).toHaveAttribute(
       "data-read-only",
       "true",
