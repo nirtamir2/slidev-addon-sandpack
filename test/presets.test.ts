@@ -104,6 +104,19 @@ describe("resolveSandpackDemo", () => {
     expect(demo.template).toBe("vanilla-ts");
   });
 
+  it.each(["auto", "light", "dark"] as const)(
+    "retains the built-in %s deck theme",
+    async (theme) => {
+      const { demo } = await resolveSandpackDemo(
+        parseDemo("react-ts"),
+        { theme } satisfies SandpackConfig,
+        { configFile },
+      );
+
+      expect(demo.theme).toBe(theme);
+    },
+  );
+
   it("retains a deck-level custom theme in the resolved demo", async () => {
     const theme = {
       colors: { accent: "rebeccapurple" },
