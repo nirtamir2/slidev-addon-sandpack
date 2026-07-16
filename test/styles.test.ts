@@ -52,14 +52,14 @@ describe("sandpack layout styles", () => {
     );
   });
 
-  it("keeps the editor and preview side by side on slide canvases", async () => {
+  it("keeps the editor and preview side by side when Sandpack styles load later", async () => {
     const styles = await readFile(
       new URL("../styles/sandpack.css", import.meta.url),
       "utf8",
     );
 
     expect(styles).toMatch(
-      /\.slidev-sandpack__workspace\s*{[^}]*flex-wrap:\s*nowrap/,
+      /\.slidev-sandpack__workspace\.sp-layout\s*{[^}]*flex-wrap:\s*nowrap/,
     );
     expect(styles).toMatch(
       /\.slidev-sandpack__workspace\s*>\s*\.sp-editor[^}]*width:\s*0/,

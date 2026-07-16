@@ -82,7 +82,7 @@ svg:where([data-slidev-sandpack-part="control-icon"]) {
   font-variant-numeric: tabular-nums;
 }
 
-.slidev-sandpack__workspace {
+.slidev-sandpack__workspace.sp-layout {
   min-height: 0;
   flex: 1;
   flex-wrap: nowrap;
