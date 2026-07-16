@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@slidev/cli": "52.1.0",
+    "@slidev/cli": "52.18.0",
     "@slidev/theme-default": "^0.25.0",
     "@slidev/types": "^52.1.0",
     "@testing-library/jest-dom": "^6.6.3",
