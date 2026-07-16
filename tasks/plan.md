@@ -32,15 +32,15 @@ resolution, validation, and renderer behavior before documentation is updated.
 
 ### Phase 2: Renderer integration
 
-- [ ] Task 2: Pass configured theme values to `SandpackProvider` and preserve
+- [x] Task 2: Pass configured theme values to `SandpackProvider` and preserve
       the compatibility fallback.
 
 ### Checkpoint: Runtime path
 
-- [ ] Focused resolver, type, and renderer checks pass.
-- [ ] The package builds and the full theme value reaches the provider without
+- [x] Focused resolver, type, and renderer checks pass.
+- [x] The package builds and the full theme value reaches the provider without
       transformation.
-- [ ] Existing configurations and manually constructed demos still resolve to
+- [x] Existing configurations and manually constructed demos still resolve to
       `"auto"`.
 
 ### Phase 3: Consumer guidance

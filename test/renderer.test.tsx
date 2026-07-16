@@ -24,12 +24,14 @@ vi.mock("@codesandbox/sandpack-react", async () => {
       files,
       options,
       template,
+      theme,
     }: {
       children: ReactNode;
       customSetup: unknown;
       files: Record<string, { code: string }>;
       options: { activeFile: string };
       template: string;
+      theme: unknown;
     }) {
       const [activeCode, setActiveCode] = useState(
         files[options.activeFile]?.code ?? "",
@@ -42,6 +44,7 @@ vi.mock("@codesandbox/sandpack-react", async () => {
             data-files={JSON.stringify(files)}
             data-options={JSON.stringify(options)}
             data-template={template}
+            data-theme={JSON.stringify(theme)}
           >
             <label>
               Mock active code
@@ -133,10 +136,27 @@ describe("sandpack demo renderer", () => {
       visibleFiles: ["/App.tsx"],
     });
     expect(provider).toHaveAttribute("data-template", "react-ts");
+    expect(
+      JSON.parse(provider.attributes.getNamedItem("data-theme")?.value ?? ""),
+    ).toBe("auto");
     expect(screen.getByTestId("editor")).toHaveAttribute(
       "data-read-only",
       "true",
     );
+  });
+
+  it("passes a custom theme object to Sandpack unchanged", () => {
+    const theme = {
+      colors: { accent: "rebeccapurple" },
+      syntax: { tag: "#006400" },
+    };
+
+    render(<SandpackDemoRenderer demo={createDemo({ theme })} />);
+
+    const provider = screen.getByTestId("provider");
+    expect(
+      JSON.parse(provider.attributes.getNamedItem("data-theme")?.value ?? ""),
+    ).toEqual(theme);
   });
 
   it("navigates within boundaries and restores canonical step snapshots", async () => {

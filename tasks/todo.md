@@ -37,17 +37,17 @@ without the optional field still receives `"auto"`.
 
 **Acceptance criteria:**
 
-- [ ] The renderer passes `demo.theme` to `SandpackProvider` without reshaping
+- [x] The renderer passes `demo.theme` to `SandpackProvider` without reshaping
       custom objects.
-- [ ] Missing `demo.theme` values continue to pass `"auto"`.
-- [ ] Existing renderer controls, step navigation, and error behavior remain
+- [x] Missing `demo.theme` values continue to pass `"auto"`.
+- [x] Existing renderer controls, step navigation, and error behavior remain
       unchanged.
 
 **Verification:**
 
-- [ ] Observe the provider-theme assertion fail against the hard-coded value.
-- [ ] Run `pnpm exec vitest run test/renderer.test.tsx`.
-- [ ] Run `pnpm run typecheck` after the green implementation.
+- [x] Observe the provider-theme assertion fail against the hard-coded value.
+- [x] Run `pnpm exec vitest run test/renderer.test.tsx`.
+- [x] Run `pnpm run typecheck` after the green implementation.
 
 **Dependencies:** Task 1.
 
@@ -57,9 +57,9 @@ without the optional field still receives `"auto"`.
 
 ## Checkpoint: Verify the runtime path
 
-- [ ] Run the focused resolver and renderer tests together.
-- [ ] Confirm the public package build emits the new theme types.
-- [ ] Inspect the source diff for unrelated preset or control changes.
+- [x] Run the focused resolver and renderer tests together.
+- [x] Confirm the public package build emits the new theme types.
+- [x] Inspect the source diff for unrelated preset or control changes.
 
 ## Task 3: Document deck-level theme configuration
 
