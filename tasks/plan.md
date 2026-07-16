@@ -50,16 +50,16 @@ resolution, validation, and renderer behavior before documentation is updated.
 
 ### Phase 4: Repository verification
 
-- [ ] Task 4: Run the complete quality gate and packed-consumer verification,
+- [x] Task 4: Run the complete quality gate and packed-consumer verification,
       then inspect the final diff.
 
 ### Checkpoint: Complete
 
-- [ ] `pnpm run check` passes.
-- [ ] `pnpm run test:pack` passes.
-- [ ] `git diff --check` passes and the change contains no credentials.
-- [ ] Every design-spec acceptance point is covered by tests or documentation.
-- [ ] The worktree contains only intentional Sandpack-theme changes.
+- [x] `pnpm run check` passes.
+- [x] `pnpm run test:pack` passes.
+- [x] `git diff --check` passes and the change contains no credentials.
+- [x] Every design-spec acceptance point is covered by tests or documentation.
+- [x] The worktree contains only intentional Sandpack-theme changes.
 
 ## Dependency order
 

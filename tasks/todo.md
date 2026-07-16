@@ -95,15 +95,15 @@ complete change before handoff.
 
 **Acceptance criteria:**
 
-- [ ] Formatting, linting, type checking, unit tests, and example build pass.
-- [ ] The isolated packed-package consumer test passes.
-- [ ] The final diff is scoped, whitespace-clean, and credential-free.
+- [x] Formatting, linting, type checking, unit tests, and example build pass.
+- [x] The isolated packed-package consumer test passes.
+- [x] The final diff is scoped, whitespace-clean, and credential-free.
 
 **Verification:**
 
-- [ ] Run `pnpm run check`.
-- [ ] Run `pnpm run test:pack`.
-- [ ] Run `git diff --check` and inspect `git diff --stat` plus the full diff.
+- [x] Run `pnpm run check`.
+- [x] Run `pnpm run test:pack`.
+- [x] Run `git diff --check` and inspect `git diff --stat` plus the full diff.
 
 **Dependencies:** Tasks 1-3.
 
