@@ -94,7 +94,7 @@
     "eslint-plugin-vue": "10.9.2",
     "globals": "17.7.0",
     "jsdom": "^26.1.0",
-    "pkg-pr-new": "0.0.78",
+    "pkg-pr-new": "0.0.79",
     "prettier": "3.9.5",
     "prettier-plugin-slidev": "^1.0.5",
     "react": "^19.2.1",
